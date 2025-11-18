@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        textarea {
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-6 shadow-lg">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <h1 class="text-3xl font-bold mb-2">Resume Data Editor</h1>
+                <p class="text-indigo-100">Easy-to-use interface for managing your resume content</p>
+            </div>
+        </header>
+
+        <div class="container mx-auto px-6 py-8 max-w-7xl">
+
+            <!-- Tab Navigation -->
+            <div class="bg-white rounded-lg shadow-md mb-6">
+                <div class="flex flex-wrap gap-2 p-4 border-b">
+                    <button onclick="showTab('json')" id="tab-json" class="tab-button active px-4 py-2 rounded-lg font-semibold">
+                        JSON Editor
+                    </button>
+                    <button onclick="showTab('visual')" id="tab-visual" class="tab-button px-4 py-2 rounded-lg font-semibold bg-gray-200 text-gray-700">
+                        Visual Editor
+                    </button>
+                    <button onclick="showTab('quick')" id="tab-quick" class="tab-button px-4 py-2 rounded-lg font-semibold bg-gray-200 text-gray-700">
+                        Quick Add
+                    </button>
+                </div>
+
+                <!-- JSON Editor Tab -->
+                <div id="content-json" class="p-6">
+                    <div class="mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Direct JSON Editor</h2>
+                        <p class="text-gray-600 mb-4">Edit the JSON directly for full control. Changes are validated before saving.</p>
+
+                        <div class="mb-4">
+                            <button onclick="loadJSON()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mr-2">
+                                Load Current Data
+                            </button>
+                            <button onclick="saveJSON()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 mr-2">
+                                Save Changes
+                            </button>
+                            <button onclick="formatJSON()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+                                Format JSON
+                            </button>
+                        </div>
+
+                        <textarea id="json-editor" class="w-full h-96 p-4 border border-gray-300 rounded-lg text-sm" placeholder="Click 'Load Current Data' to start editing..."></textarea>
+
+                        <div id="json-message" class="mt-4 hidden p-4 rounded-lg"></div>
+                    </div>
+                </div>
+
+                <!-- Visual Editor Tab -->
+                <div id="content-visual" class="p-6 hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Visual Form Editor</h2>
+                    <p class="text-gray-600 mb-6">Coming soon! Use JSON Editor or Quick Add for now.</p>
+                </div>
+
+                <!-- Quick Add Tab -->
+                <div id="content-quick" class="p-6 hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Quick Add Tools</h2>
+
+                    <!-- Add Company Section -->
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Add New Company Experience</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Company Name *</label>
+                                <input type="text" id="qa-company" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Meridian Technology Solutions">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Position *</label>
+                                <input type="text" id="qa-position" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Full-Stack Developer">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Location *</label>
+                                <input type="text" id="qa-location" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Hyderabad, India">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Start Date *</label>
+                                <input type="text" id="qa-start" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Mar 2024">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">End Date *</label>
+                                <input type="text" id="qa-end" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Present">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Website (optional)</label>
+                                <input type="text" id="qa-website" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., company.com">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <button onclick="addCompany()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 font-semibold">
+                                Add Company to Resume
+                            </button>
+                        </div>
+
+                        <div id="qa-company-message" class="hidden p-4 rounded-lg"></div>
+                    </div>
+
+                    <!-- Add Project Section -->
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Add Project to Existing Company</h3>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Select Company *</label>
+                            <select id="qa-project-company" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                <option value="">-- First load data below --</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Project Name *</label>
+                                <input type="text" id="qa-proj-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., DataBin Analytics Platform">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Your Role *</label>
+                                <input type="text" id="qa-proj-role" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Full-Stack Developer & Team Lead">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
+                                <textarea id="qa-proj-desc" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Brief description of the project..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Achievements (one per line) *</label>
+                                <textarea id="qa-proj-achievements" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Led team of 7 developers&#10;Built visual analytics dashboard&#10;Migrated from AWS to Azure"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tech Stack (comma-separated) *</label>
+                                <input type="text" id="qa-proj-tech" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="React, TypeScript, Spring Boot, PostgreSQL, Azure">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <button onclick="loadCompaniesForProject()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mr-2">
+                                Load Companies List
+                            </button>
+                            <button onclick="addProject()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 font-semibold">
+                                Add Project
+                            </button>
+                        </div>
+
+                        <div id="qa-project-message" class="hidden p-4 rounded-lg"></div>
+                    </div>
+
+                    <!-- Add Skill Section -->
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Add New Skill</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Skill Category *</label>
+                                <select id="qa-skill-category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    <option value="Frontend Development">Frontend Development</option>
+                                    <option value="Backend Development">Backend Development</option>
+                                    <option value="Databases">Databases</option>
+                                    <option value="DevOps & Cloud">DevOps & Cloud</option>
+                                    <option value="Testing & Tools">Testing & Tools</option>
+                                    <option value="AI & Emerging Tech">AI & Emerging Tech</option>
+                                    <option value="new">+ Add New Category</option>
+                                </select>
+                            </div>
+                            <div id="new-category-input" class="hidden">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">New Category Name</label>
+                                <input type="text" id="qa-new-category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Mobile Development">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Skill Name *</label>
+                            <input type="text" id="qa-skill-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., React Native">
+                        </div>
+
+                        <div class="mb-4">
+                            <button onclick="addSkill()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 font-semibold">
+                                Add Skill
+                            </button>
+                        </div>
+
+                        <div id="qa-skill-message" class="hidden p-4 rounded-lg"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h3 class="text-lg font-bold text-blue-900 mb-2">How to Use This Editor</h3>
+                <ul class="list-disc list-inside text-blue-800 space-y-1">
+                    <li><strong>JSON Editor:</strong> Direct access to edit the entire JSON file. Load → Edit → Save.</li>
+                    <li><strong>Quick Add:</strong> Simple forms to add companies, projects, or skills without touching JSON.</li>
+                    <li>After saving, refresh your <a href="index.html" class="underline font-semibold">resume page</a> to see changes.</li>
+                    <li>Always download a backup of your JSON before making major changes!</li>
+                </ul>
+            </div>
+
+            <!-- Back to Resume -->
+            <div class="mt-6 text-center">
+                <a href="index.html" class="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition">
+                    View Resume
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let resumeData = null;
+
+        // Tab switching
+        function showTab(tab) {
+            const tabs = ['json', 'visual', 'quick'];
+            tabs.forEach(t => {
+                document.getElementById(`content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('active');
+                document.getElementById(`tab-${t}`).classList.add('bg-gray-200', 'text-gray-700');
+            });
+
+            document.getElementById(`content-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.remove('bg-gray-200', 'text-gray-700');
+        }
+
+        // Show message helper
+        function showMessage(elementId, message, type = 'success') {
+            const element = document.getElementById(elementId);
+            element.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+
+            if (type === 'success') {
+                element.classList.add('bg-green-100', 'text-green-800');
+            } else {
+                element.classList.add('bg-red-100', 'text-red-800');
+            }
+
+            element.textContent = message;
+
+            setTimeout(() => {
+                element.classList.add('hidden');
+            }, 5000);
+        }
+
+        // JSON Editor Functions
+        async function loadJSON() {
+            try {
+                const response = await fetch('resume-data.json');
+                const data = await response.json();
+                resumeData = data;
+                document.getElementById('json-editor').value = JSON.stringify(data, null, 2);
+                showMessage('json-message', 'Data loaded successfully! You can now edit it.', 'success');
+            } catch (error) {
+                showMessage('json-message', 'Error loading data: ' + error.message, 'error');
+            }
+        }
+
+        function formatJSON() {
+            try {
+                const text = document.getElementById('json-editor').value;
+                const data = JSON.parse(text);
+                document.getElementById('json-editor').value = JSON.stringify(data, null, 2);
+                showMessage('json-message', 'JSON formatted successfully!', 'success');
+            } catch (error) {
+                showMessage('json-message', 'Invalid JSON! Please fix errors first.', 'error');
+            }
+        }
+
+        function saveJSON() {
+            try {
+                const text = document.getElementById('json-editor').value;
+                const data = JSON.parse(text);
+
+                // Create download
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'resume-data.json';
+                a.click();
+
+                showMessage('json-message', 'JSON downloaded! Replace the old resume-data.json file with this new one.', 'success');
+            } catch (error) {
+                showMessage('json-message', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        // Quick Add Functions
+        function addCompany() {
+            const company = document.getElementById('qa-company').value.trim();
+            const position = document.getElementById('qa-position').value.trim();
+            const location = document.getElementById('qa-location').value.trim();
+            const startDate = document.getElementById('qa-start').value.trim();
+            const endDate = document.getElementById('qa-end').value.trim();
+            const website = document.getElementById('qa-website').value.trim();
+
+            if (!company || !position || !location || !startDate || !endDate) {
+                showMessage('qa-company-message', 'Please fill in all required fields!', 'error');
+                return;
+            }
+
+            if (!resumeData) {
+                showMessage('qa-company-message', 'Please load data first using JSON Editor tab!', 'error');
+                return;
+            }
+
+            const newCompany = {
+                company,
+                location,
+                position,
+                startDate,
+                endDate,
+                projects: []
+            };
+
+            if (website) {
+                newCompany.website = website;
+            }
+
+            resumeData.experience.unshift(newCompany);
+
+            // Download updated JSON
+            const blob = new Blob([JSON.stringify(resumeData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resume-data.json';
+            a.click();
+
+            showMessage('qa-company-message', 'Company added! Download started. Replace resume-data.json with the downloaded file.', 'success');
+
+            // Clear form
+            document.getElementById('qa-company').value = '';
+            document.getElementById('qa-position').value = '';
+            document.getElementById('qa-location').value = '';
+            document.getElementById('qa-start').value = '';
+            document.getElementById('qa-end').value = '';
+            document.getElementById('qa-website').value = '';
+        }
+
+        async function loadCompaniesForProject() {
+            try {
+                const response = await fetch('resume-data.json');
+                const data = await response.json();
+                resumeData = data;
+
+                const select = document.getElementById('qa-project-company');
+                select.innerHTML = '<option value="">-- Select a company --</option>';
+
+                data.experience.forEach((exp, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = exp.company;
+                    select.appendChild(option);
+                });
+
+                showMessage('qa-project-message', 'Companies loaded! Select one to add a project.', 'success');
+            } catch (error) {
+                showMessage('qa-project-message', 'Error loading companies: ' + error.message, 'error');
+            }
+        }
+
+        function addProject() {
+            const companyIndex = document.getElementById('qa-project-company').value;
+            const name = document.getElementById('qa-proj-name').value.trim();
+            const role = document.getElementById('qa-proj-role').value.trim();
+            const description = document.getElementById('qa-proj-desc').value.trim();
+            const achievementsText = document.getElementById('qa-proj-achievements').value.trim();
+            const techStackText = document.getElementById('qa-proj-tech').value.trim();
+
+            if (!companyIndex || !name || !role || !description || !achievementsText || !techStackText) {
+                showMessage('qa-project-message', 'Please fill in all required fields!', 'error');
+                return;
+            }
+
+            if (!resumeData) {
+                showMessage('qa-project-message', 'Please load companies first!', 'error');
+                return;
+            }
+
+            const achievements = achievementsText.split('\n').filter(a => a.trim());
+            const techStack = techStackText.split(',').map(t => t.trim()).filter(t => t);
+
+            const newProject = {
+                name,
+                role,
+                description,
+                achievements,
+                techStack
+            };
+
+            resumeData.experience[companyIndex].projects.push(newProject);
+
+            // Download updated JSON
+            const blob = new Blob([JSON.stringify(resumeData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resume-data.json';
+            a.click();
+
+            showMessage('qa-project-message', 'Project added! Download started. Replace resume-data.json with the downloaded file.', 'success');
+
+            // Clear form
+            document.getElementById('qa-proj-name').value = '';
+            document.getElementById('qa-proj-role').value = '';
+            document.getElementById('qa-proj-desc').value = '';
+            document.getElementById('qa-proj-achievements').value = '';
+            document.getElementById('qa-proj-tech').value = '';
+        }
+
+        async function addSkill() {
+            let category = document.getElementById('qa-skill-category').value;
+            const skillName = document.getElementById('qa-skill-name').value.trim();
+
+            if (category === 'new') {
+                category = document.getElementById('qa-new-category').value.trim();
+                if (!category) {
+                    showMessage('qa-skill-message', 'Please enter a category name!', 'error');
+                    return;
+                }
+            }
+
+            if (!skillName) {
+                showMessage('qa-skill-message', 'Please enter a skill name!', 'error');
+                return;
+            }
+
+            if (!resumeData) {
+                try {
+                    const response = await fetch('resume-data.json');
+                    resumeData = await response.json();
+                } catch (error) {
+                    showMessage('qa-skill-message', 'Please load data first using JSON Editor tab!', 'error');
+                    return;
+                }
+            }
+
+            if (!resumeData.skills[category]) {
+                resumeData.skills[category] = [];
+            }
+
+            if (!resumeData.skills[category].includes(skillName)) {
+                resumeData.skills[category].push(skillName);
+
+                // Download updated JSON
+                const blob = new Blob([JSON.stringify(resumeData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'resume-data.json';
+                a.click();
+
+                showMessage('qa-skill-message', 'Skill added! Download started. Replace resume-data.json with the downloaded file.', 'success');
+                document.getElementById('qa-skill-name').value = '';
+            } else {
+                showMessage('qa-skill-message', 'This skill already exists in that category!', 'error');
+            }
+        }
+
+        // Show/hide new category input
+        document.getElementById('qa-skill-category').addEventListener('change', function() {
+            if (this.value === 'new') {
+                document.getElementById('new-category-input').classList.remove('hidden');
+            } else {
+                document.getElementById('new-category-input').classList.add('hidden');
+            }
+        });
+    </script>
+
+</body>
+</html>
