@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Resume - Minimal Clean</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #000;
+            background: #fff;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 40px 60px;
+        }
+
+        @media print {
+            body {
+                padding: 20px;
+            }
+        }
+
+        /* Header */
+        header {
+            border-bottom: 3px solid #000;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .title {
+            font-size: 14px;
+            color: #4B5563;
+            margin-bottom: 15px;
+        }
+
+        .contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 12px;
+            color: #374151;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        /* Summary */
+        .summary {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #374151;
+        }
+
+        /* Education */
+        .education-item {
+            margin-bottom: 15px;
+        }
+
+        .education-item h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .education-item .institution {
+            font-size: 14px;
+            font-weight: 500;
+            color: #000;
+        }
+
+        .education-item .details {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .skill-category h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-badge {
+            background: #F3F4F6;
+            border: 1px solid #D1D5DB;
+            padding: 4px 10px;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        /* Experience */
+        .experience-item {
+            margin-bottom: 25px;
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .company-name {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .date-range {
+            font-size: 12px;
+            color: #6B7280;
+            white-space: nowrap;
+        }
+
+        .position {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .location {
+            font-size: 12px;
+            color: #6B7280;
+            margin-bottom: 10px;
+        }
+
+        .project {
+            margin-bottom: 15px;
+            padding-left: 15px;
+        }
+
+        .project-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .project-role {
+            font-size: 12px;
+            font-style: italic;
+            color: #6B7280;
+            margin-bottom: 5px;
+        }
+
+        .project-desc {
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #374151;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            font-size: 12px;
+            margin-bottom: 3px;
+            padding-left: 15px;
+            position: relative;
+            color: #374151;
+        }
+
+        li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 5px;
+        }
+
+        .tech-badge {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            padding: 2px 8px;
+            font-size: 10px;
+            border-radius: 2px;
+        }
+
+        /* Achievements */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .achievement-item {
+            font-size: 13px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .achievement-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .achievement-title {
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .contact {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .experience-header {
+                flex-direction: column;
+            }
+        }
+
+        #loading {
+            text-align: center;
+            padding: 40px;
+            color: #6B7280;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading">Loading resume data...</div>
+
+    <div id="resume-content" style="display: none;">
+        <!-- Content will be generated here -->
+    </div>
+
+    <script>
+        async function loadResume() {
+            try {
+                const response = await fetch('../resume-data.json');
+                const data = await response.json();
+                renderResume(data);
+            } catch (error) {
+                document.getElementById('loading').innerHTML = 'Error loading resume data. Make sure resume-data.json exists.';
+            }
+        }
+
+        function renderResume(data) {
+            const { personal, education, skills, experience, achievements } = data;
+
+            document.getElementById('page-title').textContent = `${personal.name} - Resume`;
+
+            const html = `
+                <header>
+                    <h1>${personal.name}</h1>
+                    <div class="title">${personal.title}</div>
+                    <div class="contact">
+                        <div class="contact-item">${personal.email}</div>
+                        ${personal.phone ? `<div class="contact-item">${personal.phone}</div>` : ''}
+                        <div class="contact-item">${personal.location}</div>
+                        ${personal.linkedin ? `<div class="contact-item">${personal.linkedin.replace('https://', '')}</div>` : ''}
+                        ${personal.github ? `<div class="contact-item">${personal.github.replace('https://', '')}</div>` : ''}
+                    </div>
+                </header>
+
+                <section>
+                    <h2>Professional Summary</h2>
+                    <div class="summary">${personal.summary}</div>
+                </section>
+
+                <section>
+                    <h2>Education</h2>
+                    ${education.map(edu => `
+                        <div class="education-item">
+                            <h3>${edu.degree}</h3>
+                            <div class="institution">${edu.institution}</div>
+                            <div class="details">${edu.location} | CGPA: ${edu.cgpa} | ${edu.year}</div>
+                        </div>
+                    `).join('')}
+                </section>
+
+                <section>
+                    <h2>Technical Skills</h2>
+                    <div class="skills-grid">
+                        ${Object.entries(skills).map(([category, skillList]) => `
+                            <div class="skill-category">
+                                <h3>${category}</h3>
+                                <div class="skill-list">
+                                    ${skillList.map(skill => `<span class="skill-badge">${skill}</span>`).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Professional Experience</h2>
+                    ${experience.map(exp => `
+                        <div class="experience-item">
+                            <div class="experience-header">
+                                <div class="company-name">${exp.company}</div>
+                                <div class="date-range">${exp.startDate} - ${exp.endDate}</div>
+                            </div>
+                            <div class="position">${exp.position}</div>
+                            <div class="location">${exp.location}${exp.website ? ' | ' + exp.website : ''}</div>
+
+                            ${exp.projects.map(project => `
+                                <div class="project">
+                                    <div class="project-name">${project.name}</div>
+                                    <div class="project-role">${project.role}</div>
+                                    <div class="project-desc">${project.description}</div>
+                                    ${project.achievements ? `
+                                        <ul>
+                                            ${project.achievements.map(achievement => `<li>${achievement}</li>`).join('')}
+                                        </ul>
+                                    ` : ''}
+                                    ${project.subProjects ? project.subProjects.map(sub => `
+                                        <div style="margin-top: 8px;">
+                                            <strong style="font-size: 12px;">${sub.name}</strong>
+                                            <ul>
+                                                ${sub.details.map(detail => `<li>${detail}</li>`).join('')}
+                                            </ul>
+                                        </div>
+                                    `).join('') : ''}
+                                    <div class="tech-stack">
+                                        ${project.techStack.map(tech => `<span class="tech-badge">${tech}</span>`).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `).join('')}
+                </section>
+
+                <section>
+                    <h2>Key Achievements</h2>
+                    <div class="achievements-grid">
+                        ${achievements.map(achievement => `
+                            <div class="achievement-item">
+                                <span class="achievement-title">${achievement.title}:</span> ${achievement.description}
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+
+            document.getElementById('resume-content').innerHTML = html;
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('resume-content').style.display = 'block';
+        }
+
+        window.addEventListener('DOMContentLoaded', loadResume);
+    </script>
+
+</body>
+</html>

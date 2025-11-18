@@ -3,7 +3,12 @@
     "name": "Hemanth Naidu",
     "title": "Full-Stack Developer | Team Lead | IBM Sterling OMS Developer",
     "email": "hemanthnaidu0615@gmail.com",
+    "phone": "+91 XXXXX XXXXX",
     "location": "Hyderabad, Telangana, India",
+    "photo": "photo.jpg",
+    "linkedin": "https://linkedin.com/in/yourprofile",
+    "github": "https://github.com/hemanthnaidu0615",
+    "website": "",
     "summary": "Highly motivated Full-Stack Developer and 2024 B.Tech graduate with <strong>4+ years of professional experience</strong> across multiple internships. Proven expertise in leading development teams, managing end-to-end project lifecycles, and delivering enterprise-level solutions. Specialized in modern web technologies, cloud infrastructure (AWS/Azure), and AI integration. Successfully led a team of 7 developers and worked on diverse projects including government systems, enterprise OMS solutions, and SaaS products."
   },
   "education": [
