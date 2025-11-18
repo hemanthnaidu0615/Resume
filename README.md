@@ -1,32 +1,55 @@
-# Hemanth Naidu - Professional Resume (Modular System)
+# Hemanth Naidu - Professional Resume (Multi-Template System)
 
-This repository contains a **fully modular, data-driven resume system** that makes updating your resume as easy as editing a JSON file or using a simple web form!
+This repository contains a **fully modular, data-driven resume system** with **6 professional templates** that makes creating and maintaining your resume incredibly easy!
 
 ## 🎉 What's Special?
 
+- **🎨 6 Professional Templates** - Switch between styles instantly
 - **📝 Edit via JSON or Forms** - Choose your preferred method
 - **🔄 Fully Modular** - Data separated from presentation
-- **🎨 Beautiful Design** - Modern gradient design with Tailwind CSS
-- **📱 Fully Responsive** - Works on all devices
-- **🖨️ Print-Friendly** - Perfect PDF exports
+- **🎯 Industry-Specific Designs** - Templates for tech, corporate, creative, executive
+- **📱 Fully Responsive** - All templates work on all devices
+- **🖨️ Print-Friendly** - Perfect PDF exports from any template
 - **⚡ No Build Process** - Just edit and refresh!
+- **🔀 Easy Switching** - Change templates without losing data
 
-## 📁 Files
+## 🎨 Available Templates
+
+1. **Professional Gradient** (`index.html`) - Modern, tech-focused
+2. **Minimal Clean** - ATS-friendly, universal
+3. **Modern Bold** - Creative, standout design
+4. **Classic Traditional** - Executive, formal
+5. **Compact One-Page** - Perfect for job fairs
+6. **Two-Column Modern** - Unique sidebar layout
+
+**View all templates:** Open `templates.html` in your browser!
+
+## 📁 Key Files
 
 | File | Purpose |
 |------|---------|
-| `index.html` | Your resume (auto-generated from JSON data) |
-| `admin.html` | Admin interface to easily edit your resume |
+| `templates.html` | **Template gallery - choose your style!** |
+| `customize.html` | Live template customizer & preview |
+| `index.html` | Your current resume (Professional Gradient) |
+| `admin.html` | Admin interface to edit your resume data |
 | `resume-data.json` | **ALL your resume data (edit this!)** |
-| `MODULAR_GUIDE.md` | Complete guide on using the modular system |
+| `templates/` | Folder with all template HTML files |
+| `TEMPLATES_README.md` | Complete template system guide |
+| `MODULAR_GUIDE.md` | Guide on using the modular data system |
 | `INTERNAL_DOCUMENTATION.md` | Detailed work history documentation |
 
 ## 🚀 Quick Start
 
-### View Your Resume
-Simply open `index.html` in any web browser!
+### 1. Browse Templates
+Open `templates.html` to see all 6 professional templates with live previews!
 
-### Update Your Resume
+### 2. View Your Resume
+Open `index.html` (or any template) in your browser to see your resume!
+
+### 3. Customize & Preview
+Open `customize.html` for live template preview and quick switching!
+
+### 4. Update Your Resume
 
 #### Method 1: Use the Admin Interface (Recommended)
 1. Open `admin.html` in your browser
