@@ -9,6 +9,7 @@
     "linkedin": "https://linkedin.com/in/yourprofile",
     "github": "https://github.com/hemanthnaidu0615",
     "website": "",
+    "portfolio": "",
     "summary": "Highly motivated Full-Stack Developer and 2024 B.Tech graduate with <strong>4+ years of professional experience</strong> across multiple internships. Proven expertise in leading development teams, managing end-to-end project lifecycles, and delivering enterprise-level solutions. Specialized in modern web technologies, cloud infrastructure (AWS/Azure), and AI integration. Successfully led a team of 7 developers and worked on diverse projects including government systems, enterprise OMS solutions, and SaaS products."
   },
   "education": [
@@ -17,7 +18,37 @@
       "institution": "Institute of Aeronautical Engineering",
       "location": "Dundigal, Hyderabad, Telangana, India",
       "cgpa": "7.9/10",
-      "year": "2024"
+      "year": "2024",
+      "startYear": "2020",
+      "endYear": "2024",
+      "fieldOfStudy": "Computer Science Engineering",
+      "honors": "",
+      "relevantCoursework": []
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Example: AWS Certified Solutions Architect",
+      "issuer": "Amazon Web Services",
+      "date": "2024",
+      "expiryDate": "",
+      "credentialId": "",
+      "credentialUrl": "",
+      "description": "Add your certifications here. Delete this example."
+    }
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "proficiency": "Native/Bilingual"
+    },
+    {
+      "language": "Telugu",
+      "proficiency": "Native"
+    },
+    {
+      "language": "Hindi",
+      "proficiency": "Professional Working"
     }
   ],
   "skills": {
@@ -74,6 +105,8 @@
       "position": "Trainee → Full-Stack Developer → Team Lead → Senior OMS Developer",
       "startDate": "Mar 2024",
       "endDate": "Present",
+      "current": true,
+      "duration": "",
       "projects": [
         {
           "name": "DataBin - Real-Time Analytics Platform",
@@ -163,6 +196,8 @@
       "position": "Full-Stack Developer",
       "startDate": "Aug 2023",
       "endDate": "Sep 2023",
+      "current": false,
+      "duration": "2 months",
       "website": "uniblocks.io",
       "projects": [
         {
@@ -191,6 +226,7 @@
       "position": "Backend Developer",
       "startDate": "Jan 2023",
       "endDate": "Jan 2023",
+      "current": false,
       "duration": "1 month",
       "projects": [
         {
@@ -216,6 +252,8 @@
       "position": "Frontend Developer → Full-Stack Developer",
       "startDate": "Apr 2020",
       "endDate": "Jan 2023",
+      "current": false,
+      "duration": "2 years 9 months",
       "projects": [
         {
           "name": "Company Website - nfcsolutionsusa.com",
@@ -260,6 +298,117 @@
           ]
         }
       ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Example: Personal Portfolio Website",
+      "description": "Built a personal portfolio website showcasing projects and skills",
+      "role": "Solo Developer",
+      "startDate": "2023",
+      "endDate": "2023",
+      "url": "https://example.com",
+      "github": "https://github.com/username/project",
+      "highlights": [
+        "Implemented responsive design with React and Tailwind CSS",
+        "Integrated blog with Markdown support",
+        "Deployed on Vercel with CI/CD pipeline"
+      ],
+      "techStack": [
+        "React",
+        "Next.js",
+        "Tailwind CSS",
+        "Vercel"
+      ]
+    }
+  ],
+  "volunteer": [
+    {
+      "organization": "Example: Local Tech Community",
+      "role": "Volunteer Mentor",
+      "startDate": "2023",
+      "endDate": "Present",
+      "current": true,
+      "description": "Mentoring students in web development and career guidance",
+      "highlights": [
+        "Mentored 10+ students in web development",
+        "Conducted workshops on React and JavaScript",
+        "Helped students land their first tech jobs"
+      ]
+    }
+  ],
+  "awards": [
+    {
+      "title": "Example: Best Innovation Award",
+      "issuer": "Company Name",
+      "date": "2024",
+      "description": "Awarded for innovative solution in DataBin project that reduced processing time by 40%"
+    }
+  ],
+  "publications": [
+    {
+      "title": "Example: Building Scalable Microservices with Spring Boot",
+      "publisher": "Tech Blog / Medium",
+      "date": "2024",
+      "url": "https://example.com/article",
+      "description": "An in-depth guide on designing and deploying microservices architecture"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Example: AWS Solutions Architect Professional",
+      "provider": "AWS Training",
+      "date": "2024",
+      "url": "",
+      "description": "Advanced AWS architecture, security, and best practices"
+    }
+  ],
+  "professionalMemberships": [
+    {
+      "organization": "Example: IEEE Computer Society",
+      "role": "Member",
+      "startDate": "2023",
+      "endDate": "Present",
+      "current": true,
+      "description": "Active member participating in technical conferences and networking events"
+    }
+  ],
+  "speaking": [
+    {
+      "title": "Example: Introduction to Microservices Architecture",
+      "event": "Tech Conference 2024",
+      "location": "Hyderabad, India",
+      "date": "2024",
+      "url": "",
+      "description": "Presented to 200+ attendees on microservices best practices"
+    }
+  ],
+  "patents": [
+    {
+      "title": "Example: Method for Real-Time Data Synchronization",
+      "patentNumber": "US1234567",
+      "status": "Pending",
+      "date": "2024",
+      "url": "",
+      "description": "Novel approach to synchronizing data across distributed systems"
+    }
+  ],
+  "interests": [
+    "Open Source Contribution",
+    "Cloud Architecture",
+    "AI/ML Exploration",
+    "Tech Blogging",
+    "Mentoring",
+    "Competitive Programming"
+  ],
+  "references": [
+    {
+      "name": "Available upon request",
+      "title": "",
+      "company": "",
+      "email": "",
+      "phone": "",
+      "relationship": ""
     }
   ],
   "achievements": [
@@ -318,45 +467,9 @@
       "highlight": "Annotation-based | Auto-generated HTML docs"
     }
   ],
-  "certifications": [],
-  "languages": [
-    {
-      "language": "English",
-      "proficiency": "Professional Working"
-    },
-    {
-      "language": "Telugu",
-      "proficiency": "Native"
-    },
-    {
-      "language": "Hindi",
-      "proficiency": "Professional Working"
-    }
-  ],
-  "projects": [],
-  "volunteer": [],
-  "awards": [],
-  "publications": [],
-  "courses": [],
-  "professionalMemberships": [],
-  "speaking": [],
-  "patents": [],
-  "interests": [
-    "Cloud Architecture",
-    "AI/ML Integration",
-    "Full-Stack Development",
-    "Team Leadership",
-    "Open Source Contribution",
-    "Tech Innovation"
-  ],
-  "references": [
-    {
-      "name": "Available upon request",
-      "title": "",
-      "company": "",
-      "email": "",
-      "phone": "",
-      "relationship": ""
-    }
-  ]
+  "_meta": {
+    "version": "2.0",
+    "lastUpdated": "2024-11-19",
+    "schemaDescription": "Enhanced resume data schema with complete professional sections"
+  }
 }
