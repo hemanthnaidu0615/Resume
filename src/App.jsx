@@ -9,7 +9,8 @@ import ResumeWizard from './components/wizard/ResumeWizard'
 import ATSChecker from './components/ATSChecker'
 import JDMatcher from './components/JDMatcher'
 import AchievementGenerator from './components/AchievementGenerator'
-import { Sparkles, Eye, Edit3, Layout, Shield, Target, Download, Wand2 } from 'lucide-react'
+import ContentOptimizer from './components/ContentOptimizer'
+import { Sparkles, Eye, Edit3, Layout, Shield, Target, Download, Wand2, Zap } from 'lucide-react'
 
 function App() {
   const [activeTab, setActiveTab] = useState('preview')
@@ -50,6 +51,7 @@ function App() {
     { id: 'ats', label: 'ATS Check', icon: Shield },
     { id: 'jd-match', label: 'JD Match', icon: Target },
     { id: 'generator', label: 'AI Writer', icon: Wand2 },
+    { id: 'optimizer', label: 'Optimize', icon: Zap },
   ]
 
   return (
@@ -73,10 +75,10 @@ function App() {
               className="flex items-center gap-2 px-3 py-2 text-primary-600 hover:bg-primary-50 rounded-lg font-medium transition-colors text-sm"
             >
               <Sparkles className="w-4 h-4" />
-              <span className="hidden md:inline">New Resume Wizard</span>
+              <span className="hidden md:inline">Wizard</span>
             </button>
 
-            <div className="w-px h-6 bg-gray-200 mx-2" />
+            <div className="w-px h-6 bg-gray-200 mx-1" />
 
             {tabs.map(tab => {
               const Icon = tab.icon
@@ -84,14 +86,14 @@ function App() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                  className={`flex items-center gap-1.5 px-2.5 py-2 rounded-lg font-medium transition-colors text-sm ${
                     activeTab === tab.id
                       ? 'bg-primary-100 text-primary-700'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span className="hidden lg:inline">{tab.label}</span>
+                  <span className="hidden xl:inline">{tab.label}</span>
                 </button>
               )
             })}
@@ -122,7 +124,7 @@ function App() {
         {/* Main Area */}
         <main
           className={`flex-1 p-6 overflow-auto ${
-            ['ats', 'jd-match', 'generator'].includes(activeTab) ? 'max-w-5xl mx-auto' : ''
+            ['ats', 'jd-match', 'generator', 'optimizer'].includes(activeTab) ? 'max-w-5xl mx-auto' : ''
           }`}
           style={{ height: 'calc(100vh - 64px)' }}
         >
@@ -132,6 +134,7 @@ function App() {
           {activeTab === 'ats' && <ATSChecker />}
           {activeTab === 'jd-match' && <JDMatcher />}
           {activeTab === 'generator' && <AchievementGenerator />}
+          {activeTab === 'optimizer' && <ContentOptimizer />}
         </main>
       </div>
 

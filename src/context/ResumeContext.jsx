@@ -21,6 +21,11 @@ export function ResumeProvider({ children }) {
     return localStorage.getItem('fontSize') || 'medium'
   })
 
+  const [pageScale, setPageScale] = useState(() => {
+    const saved = localStorage.getItem('pageScale')
+    return saved ? parseFloat(saved) : 1
+  })
+
   // Save to localStorage on changes
   useEffect(() => {
     localStorage.setItem('resumeData', JSON.stringify(resumeData))
@@ -38,10 +43,14 @@ export function ResumeProvider({ children }) {
     localStorage.setItem('fontSize', fontSize)
   }, [fontSize])
 
-  const updatePersonal = (field, value) => {
+  useEffect(() => {
+    localStorage.setItem('pageScale', pageScale.toString())
+  }, [pageScale])
+
+  const updatePersonal = (updates) => {
     setResumeData(prev => ({
       ...prev,
-      personal: { ...prev.personal, [field]: value }
+      personal: { ...prev.personal, ...updates }
     }))
   }
 
@@ -86,6 +95,7 @@ export function ResumeProvider({ children }) {
     setActiveTemplate('professional')
     setThemeColor('#0ea5e9')
     setFontSize('medium')
+    setPageScale(1)
   }
 
   const value = {
@@ -97,6 +107,8 @@ export function ResumeProvider({ children }) {
     setThemeColor,
     fontSize,
     setFontSize,
+    pageScale,
+    setPageScale,
     updatePersonal,
     updateSection,
     addToSection,

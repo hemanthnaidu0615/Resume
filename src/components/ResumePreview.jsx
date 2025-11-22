@@ -36,24 +36,26 @@ const templates = {
 }
 
 export default function ResumePreview() {
-  const { resumeData, activeTemplate, themeColor, fontSize } = useResume()
+  const { resumeData, activeTemplate, themeColor, fontSize, pageScale } = useResume()
 
   const Template = templates[activeTemplate] || ProfessionalTemplate
 
-  const fontSizeClass = {
-    small: 'text-sm',
-    medium: 'text-base',
-    large: 'text-lg'
-  }[fontSize] || 'text-base'
+  const fontSizeStyles = {
+    small: { fontSize: '14px' },
+    medium: { fontSize: '16px' },
+    large: { fontSize: '18px' }
+  }
 
   return (
     <div className="flex justify-center">
       <div
-        className={`bg-white shadow-2xl ${fontSizeClass}`}
+        className="bg-white shadow-2xl transition-transform duration-200 origin-top"
         style={{
           width: '210mm',
           minHeight: '297mm',
-          '--theme-color': themeColor
+          '--theme-color': themeColor,
+          transform: `scale(${pageScale || 1})`,
+          ...fontSizeStyles[fontSize] || fontSizeStyles.medium
         }}
       >
         <Template data={resumeData} themeColor={themeColor} />
