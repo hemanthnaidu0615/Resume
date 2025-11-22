@@ -98,77 +98,15 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <!-- Loading State -->
     <div id="loading" class="text-center">
         <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
         <p class="mt-4 text-gray-600">Loading Resume...</p>
     </div>
 
-    <!-- Main Content (Hidden until loaded) -->
-    <div id="resume-content" style="display: none;">
+    <div id="resume-content" style="display: none;"></div>
 
-        <!-- Header Section -->
-        <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12 print:py-6">
-            <div class="container mx-auto px-6 max-w-6xl">
-                <h1 id="header-name" class="text-5xl font-bold mb-2 print:text-4xl"></h1>
-                <p id="header-title" class="text-2xl mb-4 text-indigo-100 print:text-xl"></p>
-                <div id="header-contact" class="flex flex-wrap gap-4 text-sm print:text-xs"></div>
-            </div>
-        </header>
-
-        <div class="container mx-auto px-6 py-8 max-w-6xl">
-
-            <!-- Summary Section -->
-            <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
-                <h2 class="text-3xl font-bold mb-4 gradient-text section-title">Professional Summary</h2>
-                <p id="summary-text" class="text-gray-700 leading-relaxed text-lg"></p>
-            </section>
-
-            <!-- Education Section -->
-            <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
-                <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Education</h2>
-                <div id="education-list"></div>
-            </section>
-
-            <!-- Technical Skills Section -->
-            <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
-                <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Technical Skills</h2>
-                <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-            </section>
-
-            <!-- Professional Experience Section -->
-            <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none page-break">
-                <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Professional Experience</h2>
-                <div id="experience-list"></div>
-            </section>
-
-            <!-- Key Achievements -->
-            <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
-                <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Key Achievements</h2>
-                <div id="achievements-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            </section>
-
-            <!-- Projects Portfolio -->
-            <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
-                <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Notable Projects</h2>
-                <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-            </section>
-
-        </div>
-
-        <!-- Footer -->
-        <footer class="bg-gray-800 text-white py-6 mt-12 print:hidden">
-            <div class="container mx-auto px-6 max-w-6xl text-center">
-                <p class="text-sm">Last Updated: <span id="last-updated"></span></p>
-                <p class="text-xs text-gray-400 mt-2">This resume is built with modular JSON data</p>
-                <a href="admin.html" class="text-indigo-400 hover:text-indigo-300 text-sm mt-2 inline-block">Edit Resume Data</a>
-            </div>
-        </footer>
-
-    </div>
-
+    <script src="resume-utils.js"></script>
     <script>
-        // Load and render resume data
         async function loadResumeData() {
             try {
                 const response = await fetch('resume-data.json');
@@ -186,43 +124,10 @@
         }
 
         function renderResume(data) {
-            // Set page title
-            document.getElementById('page-title').textContent = `${data.personal.name} - Resume`;
+            const { personal, education, skills, experience, achievements, notableProjects, certifications, languages, projects, volunteer, awards, publications, courses, speaking, patents, interests, references } = data;
 
-            // Render header
-            document.getElementById('header-name').textContent = data.personal.name;
-            document.getElementById('header-title').textContent = data.personal.title;
+            document.getElementById('page-title').textContent = `${personal.name} - Resume`;
 
-            const contactHTML = `
-                <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
-                    <span>${data.personal.location}</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
-                    <span>${data.personal.email}</span>
-                </div>
-            `;
-            document.getElementById('header-contact').innerHTML = contactHTML;
-
-            // Render summary
-            document.getElementById('summary-text').innerHTML = data.personal.summary;
-
-            // Render education
-            const educationHTML = data.education.map(edu => `
-                <div class="border-l-4 border-indigo-600 pl-6">
-                    <h3 class="text-xl font-bold text-gray-900">${edu.degree}</h3>
-                    <p class="text-indigo-600 font-semibold">${edu.institution}</p>
-                    <p class="text-gray-600">${edu.location}</p>
-                    <div class="mt-2 flex items-center gap-4">
-                        <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold">CGPA: ${edu.cgpa}</span>
-                        <span class="text-gray-600">Graduated: ${edu.year}</span>
-                    </div>
-                </div>
-            `).join('');
-            document.getElementById('education-list').innerHTML = educationHTML;
-
-            // Render skills
             const skillColors = {
                 'Frontend Development': 'blue',
                 'Backend Development': 'purple',
@@ -232,118 +137,375 @@
                 'AI & Emerging Tech': 'red'
             };
 
-            const skillsHTML = Object.entries(data.skills).map(([category, skills]) => {
-                const color = skillColors[category] || 'gray';
-                return `
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-                            <span class="w-2 h-2 bg-${color}-600 rounded-full"></span>
-                            ${category}
-                        </h3>
-                        <div class="flex flex-wrap gap-2">
-                            ${skills.map(skill => `
-                                <span class="skill-badge bg-${color}-100 text-${color}-800 px-3 py-1 rounded-lg text-sm font-medium">${skill}</span>
-                            `).join('')}
+            const html = `
+                <!-- Header Section -->
+                <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12 print:py-6">
+                    <div class="container mx-auto px-6 max-w-6xl">
+                        <h1 class="text-5xl font-bold mb-2 print:text-4xl">${personal.name}</h1>
+                        <p class="text-2xl mb-4 text-indigo-100 print:text-xl">${personal.title}</p>
+                        <div class="flex flex-wrap gap-4 text-sm print:text-xs">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                                <span>${personal.location}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+                                <span>${personal.email}</span>
+                            </div>
+                            ${personal.phone ? `
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+                                    <span>${personal.phone}</span>
+                                </div>
+                            ` : ''}
+                            ${personal.linkedin ? `<span class="bg-white/20 px-3 py-1 rounded-full">${ResumeUtils.formatURL(personal.linkedin)}</span>` : ''}
+                            ${personal.github ? `<span class="bg-white/20 px-3 py-1 rounded-full">${ResumeUtils.formatURL(personal.github)}</span>` : ''}
+                            ${personal.website ? `<span class="bg-white/20 px-3 py-1 rounded-full">${ResumeUtils.formatURL(personal.website)}</span>` : ''}
                         </div>
                     </div>
-                `;
-            }).join('');
-            document.getElementById('skills-grid').innerHTML = skillsHTML;
+                </header>
 
-            // Render experience
-            const experienceHTML = data.experience.map(exp => {
-                const projectsHTML = exp.projects.map(project => {
-                    let projectContent = `
-                        <div class="ml-4 mb-6 border-l-2 border-indigo-200 pl-4">
-                            <h4 class="text-xl font-bold text-gray-800 mb-2">${project.name}</h4>
-                            <p class="text-sm text-indigo-600 font-semibold mb-2">Role: ${project.role}</p>
-                            <p class="text-gray-700 mb-3">${project.description}</p>
-                    `;
+                <div class="container mx-auto px-6 py-8 max-w-6xl">
 
-                    // Handle sub-projects if they exist
-                    if (project.subProjects) {
-                        const subProjectsHTML = project.subProjects.map(sub => `
-                            <div class="mb-4">
-                                <p class="font-semibold text-gray-800">${sub.name}</p>
-                                <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
-                                    ${sub.details.map(detail => `<li>${detail}</li>`).join('')}
-                                </ul>
+                    <!-- Summary Section -->
+                    <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                        <h2 class="text-3xl font-bold mb-4 gradient-text section-title">Professional Summary</h2>
+                        <p class="text-gray-700 leading-relaxed text-lg">${personal.summary}</p>
+                    </section>
+
+                    <!-- Education Section -->
+                    <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                        <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Education</h2>
+                        ${education.map(edu => `
+                            <div class="border-l-4 border-indigo-600 pl-6">
+                                <h3 class="text-xl font-bold text-gray-900">${edu.degree}</h3>
+                                <p class="text-indigo-600 font-semibold">${edu.institution}</p>
+                                <p class="text-gray-600">${edu.location}</p>
+                                <div class="mt-2 flex items-center gap-4">
+                                    <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold">CGPA: ${edu.cgpa}</span>
+                                    <span class="text-gray-600">Graduated: ${edu.year}</span>
+                                </div>
+                                ${edu.honors ? `<p class="text-indigo-600 mt-2 font-medium">${edu.honors}</p>` : ''}
                             </div>
-                        `).join('');
-                        projectContent += subProjectsHTML;
-                    } else if (project.achievements) {
-                        projectContent += `
-                            <ul class="list-disc list-inside text-gray-700 mb-3 space-y-1">
-                                ${project.achievements.map(achievement => `<li>${achievement}</li>`).join('')}
-                            </ul>
-                        `;
-                    }
+                        `).join('')}
+                    </section>
 
-                    projectContent += `
-                            <div class="flex flex-wrap gap-2">
-                                ${project.techStack.map(tech => `
-                                    <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">${tech}</span>
+                    <!-- Technical Skills Section -->
+                    <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                        <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Technical Skills</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            ${Object.entries(skills).map(([category, skillList]) => {
+                                const color = skillColors[category] || 'gray';
+                                return `
+                                    <div>
+                                        <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                            <span class="w-2 h-2 bg-${color}-600 rounded-full"></span>
+                                            ${category}
+                                        </h3>
+                                        <div class="flex flex-wrap gap-2">
+                                            ${skillList.map(skill => `
+                                                <span class="skill-badge bg-${color}-100 text-${color}-800 px-3 py-1 rounded-lg text-sm font-medium">${skill}</span>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </section>
+
+                    <!-- Professional Experience Section -->
+                    <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none page-break">
+                        <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Professional Experience</h2>
+                        ${experience.map(exp => `
+                            <div class="timeline-item mb-8">
+                                <div class="mb-6">
+                                    <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
+                                        <div>
+                                            <h3 class="text-2xl font-bold text-gray-900">${exp.company}</h3>
+                                            <p class="text-indigo-600 font-semibold">${exp.position}</p>
+                                        </div>
+                                        <span class="bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-semibold whitespace-nowrap">
+                                            ${exp.startDate} - ${exp.endDate}
+                                        </span>
+                                    </div>
+                                    <p class="text-gray-600 mb-4">${exp.location}${exp.website ? ' | ' + exp.website : ''}${exp.duration ? ' (' + exp.duration + ')' : ''}</p>
+                                    ${exp.projects.map(project => `
+                                        <div class="ml-4 mb-6 border-l-2 border-indigo-200 pl-4">
+                                            <h4 class="text-xl font-bold text-gray-800 mb-2">${project.name}</h4>
+                                            <p class="text-sm text-indigo-600 font-semibold mb-2">Role: ${project.role}</p>
+                                            <p class="text-gray-700 mb-3">${project.description}</p>
+                                            ${project.subProjects ? project.subProjects.map(sub => `
+                                                <div class="mb-4">
+                                                    <p class="font-semibold text-gray-800">${sub.name}</p>
+                                                    <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
+                                                        ${sub.details.map(detail => `<li>${detail}</li>`).join('')}
+                                                    </ul>
+                                                </div>
+                                            `).join('') : project.achievements ? `
+                                                <ul class="list-disc list-inside text-gray-700 mb-3 space-y-1">
+                                                    ${project.achievements.map(achievement => `<li>${achievement}</li>`).join('')}
+                                                </ul>
+                                            ` : ''}
+                                            <div class="flex flex-wrap gap-2">
+                                                ${project.techStack.map(tech => `
+                                                    <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">${tech}</span>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </section>
+
+                    <!-- Certifications -->
+                    ${ResumeUtils.hasData(certifications) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Certifications</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${certifications.map(cert => `
+                                    <div class="border border-gray-200 rounded-lg p-4">
+                                        <h3 class="text-lg font-bold text-gray-900">${cert.name}</h3>
+                                        <p class="text-indigo-600 font-semibold">${cert.issuer}</p>
+                                        <p class="text-gray-500 text-sm">${cert.date}${cert.expiryDate ? ' - ' + cert.expiryDate : ''}</p>
+                                        ${cert.credentialId ? `<p class="text-xs text-gray-400 mt-1">ID: ${cert.credentialId}</p>` : ''}
+                                    </div>
                                 `).join('')}
                             </div>
-                        </div>
-                    `;
+                        </section>
+                    ` : ''}
 
-                    return projectContent;
-                }).join('');
-
-                return `
-                    <div class="timeline-item mb-8">
-                        <div class="mb-6">
-                            <div class="flex justify-between items-start flex-wrap gap-2 mb-2">
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-900">${exp.company}</h3>
-                                    <p class="text-indigo-600 font-semibold">${exp.position}</p>
-                                </div>
-                                <span class="bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-semibold whitespace-nowrap">
-                                    ${exp.startDate} - ${exp.endDate}
-                                </span>
+                    <!-- Personal Projects -->
+                    ${ResumeUtils.hasData(projects) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Personal Projects</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                ${projects.map(project => `
+                                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                                        <h3 class="text-lg font-bold text-gray-900 mb-2">${project.name}</h3>
+                                        <p class="text-sm text-gray-600 mb-2">${project.description}</p>
+                                        ${project.url ? `<a href="${project.url}" class="text-indigo-600 text-sm hover:underline">${ResumeUtils.formatURL(project.url)}</a>` : ''}
+                                        ${project.highlights ? `
+                                            <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1 text-sm">
+                                                ${project.highlights.map(h => `<li>${h}</li>`).join('')}
+                                            </ul>
+                                        ` : ''}
+                                        ${project.techStack ? `
+                                            <div class="flex flex-wrap gap-2 mt-3">
+                                                ${project.techStack.map(tech => `
+                                                    <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">${tech}</span>
+                                                `).join('')}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                `).join('')}
                             </div>
-                            <p class="text-gray-600 mb-4">${exp.location}${exp.website ? ' | ' + exp.website : ''}${exp.duration ? ' (' + exp.duration + ')' : ''}</p>
-                            ${projectsHTML}
+                        </section>
+                    ` : ''}
+
+                    <!-- Awards -->
+                    ${ResumeUtils.hasData(awards) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Awards & Honors</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${awards.map(award => `
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0">
+                                            <span class="text-yellow-600 text-lg">★</span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-gray-900">${award.title}</h3>
+                                            <p class="text-indigo-600 text-sm">${award.issuer} | ${award.date}</p>
+                                            ${award.description ? `<p class="text-gray-600 text-sm mt-1">${award.description}</p>` : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </section>
+                    ` : ''}
+
+                    <!-- Publications -->
+                    ${ResumeUtils.hasData(publications) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Publications</h2>
+                            ${publications.map(pub => `
+                                <div class="mb-4 border-l-4 border-indigo-600 pl-4">
+                                    <h3 class="font-bold text-gray-900">${pub.title}</h3>
+                                    <p class="text-indigo-600">${pub.publisher} | ${pub.date}</p>
+                                    ${pub.description ? `<p class="text-gray-600 text-sm mt-1">${pub.description}</p>` : ''}
+                                </div>
+                            `).join('')}
+                        </section>
+                    ` : ''}
+
+                    <!-- Speaking -->
+                    ${ResumeUtils.hasData(speaking) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Speaking Engagements</h2>
+                            ${speaking.map(talk => `
+                                <div class="mb-4 border-l-4 border-purple-600 pl-4">
+                                    <h3 class="font-bold text-gray-900">${talk.title}</h3>
+                                    <p class="text-indigo-600">${talk.event} | ${talk.location}</p>
+                                    <p class="text-gray-500 text-sm">${talk.date}</p>
+                                    ${talk.description ? `<p class="text-gray-600 text-sm mt-1">${talk.description}</p>` : ''}
+                                </div>
+                            `).join('')}
+                        </section>
+                    ` : ''}
+
+                    <!-- Volunteer -->
+                    ${ResumeUtils.hasData(volunteer) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Volunteer Experience</h2>
+                            ${volunteer.map(vol => `
+                                <div class="mb-4 border-l-4 border-green-600 pl-4">
+                                    <h3 class="font-bold text-gray-900">${vol.organization}</h3>
+                                    <p class="text-indigo-600">${vol.role}</p>
+                                    <p class="text-gray-500 text-sm">${vol.startDate} - ${vol.endDate || 'Present'}</p>
+                                    ${vol.description ? `<p class="text-gray-600 text-sm mt-1">${vol.description}</p>` : ''}
+                                    ${vol.highlights ? `
+                                        <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1 text-sm">
+                                            ${vol.highlights.map(h => `<li>${h}</li>`).join('')}
+                                        </ul>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </section>
+                    ` : ''}
+
+                    <!-- Courses -->
+                    ${ResumeUtils.hasData(courses) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Courses & Training</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${courses.map(course => `
+                                    <div class="border border-gray-200 rounded-lg p-4">
+                                        <h3 class="font-bold text-gray-900">${course.name}</h3>
+                                        <p class="text-indigo-600 text-sm">${course.provider}</p>
+                                        <p class="text-gray-500 text-xs">${course.date}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </section>
+                    ` : ''}
+
+                    <!-- Patents -->
+                    ${ResumeUtils.hasData(patents) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Patents</h2>
+                            ${patents.map(patent => `
+                                <div class="mb-4 border-l-4 border-indigo-600 pl-4">
+                                    <h3 class="font-bold text-gray-900">${patent.title}</h3>
+                                    <p class="text-indigo-600">${patent.patentNumber} | ${patent.status}</p>
+                                    <p class="text-gray-500 text-sm">${patent.date}</p>
+                                    ${patent.description ? `<p class="text-gray-600 text-sm mt-1">${patent.description}</p>` : ''}
+                                </div>
+                            `).join('')}
+                        </section>
+                    ` : ''}
+
+                    <!-- Key Achievements -->
+                    ${ResumeUtils.hasData(achievements) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Key Achievements</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${achievements.map(achievement => `
+                                    <div class="flex items-start gap-3">
+                                        <svg class="w-6 h-6 text-indigo-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <p class="text-gray-700"><strong>${achievement.title}:</strong> ${achievement.description}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </section>
+                    ` : ''}
+
+                    <!-- Notable Projects -->
+                    ${ResumeUtils.hasData(notableProjects) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Notable Projects</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                ${notableProjects.map(project => `
+                                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                                        <h3 class="text-lg font-bold text-gray-900 mb-2">${project.name}</h3>
+                                        <p class="text-sm text-gray-600 mb-2">${project.description}</p>
+                                        <p class="text-xs text-indigo-600 font-semibold">${project.highlight}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </section>
+                    ` : ''}
+
+                    <!-- Languages -->
+                    ${ResumeUtils.hasData(languages) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Languages</h2>
+                            <div class="flex flex-wrap gap-4">
+                                ${languages.map(lang => `
+                                    <div class="bg-gray-50 rounded-lg px-6 py-4 text-center">
+                                        <p class="font-bold text-gray-900">${lang.language}</p>
+                                        <p class="text-indigo-600 text-sm">${lang.proficiency}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </section>
+                    ` : ''}
+
+                    <!-- Interests -->
+                    ${ResumeUtils.hasData(interests) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">Interests</h2>
+                            <div class="flex flex-wrap gap-3">
+                                ${interests.map(interest => `
+                                    <span class="bg-indigo-50 text-indigo-700 px-4 py-2 rounded-full font-medium">${interest}</span>
+                                `).join('')}
+                            </div>
+                        </section>
+                    ` : ''}
+
+                    <!-- References -->
+                    ${ResumeUtils.hasData(references) ? `
+                        <section class="mb-10 bg-white rounded-lg shadow-md p-6 print:shadow-none">
+                            <h2 class="text-3xl font-bold mb-6 gradient-text section-title">References</h2>
+                            ${references[0].name === 'Available upon request' ? `
+                                <p class="text-gray-600 italic">Available upon request</p>
+                            ` : `
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    ${references.map(ref => `
+                                        <div class="border border-gray-200 rounded-lg p-4">
+                                            <h3 class="font-bold text-gray-900">${ref.name}</h3>
+                                            <p class="text-indigo-600">${ref.title}${ref.company ? ' at ' + ref.company : ''}</p>
+                                            ${ref.email ? `<p class="text-gray-500 text-sm mt-2">${ref.email}</p>` : ''}
+                                            ${ref.phone ? `<p class="text-gray-500 text-sm">${ref.phone}</p>` : ''}
+                                            ${ref.relationship ? `<p class="text-gray-400 text-xs mt-1">${ref.relationship}</p>` : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `}
+                        </section>
+                    ` : ''}
+
+                </div>
+
+                <!-- Footer -->
+                <footer class="bg-gray-800 text-white py-6 mt-12 print:hidden">
+                    <div class="container mx-auto px-6 max-w-6xl text-center">
+                        <p class="text-sm">Last Updated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</p>
+                        <p class="text-xs text-gray-400 mt-2">Smart Resume Template - Auto-hides empty sections</p>
+                        <div class="mt-3 flex justify-center gap-4">
+                            <a href="admin.html" class="text-indigo-400 hover:text-indigo-300 text-sm">Edit Resume</a>
+                            <a href="templates.html" class="text-indigo-400 hover:text-indigo-300 text-sm">Browse Templates</a>
                         </div>
                     </div>
-                `;
-            }).join('');
-            document.getElementById('experience-list').innerHTML = experienceHTML;
+                </footer>
+            `;
 
-            // Render achievements
-            const achievementsHTML = data.achievements.map(achievement => `
-                <div class="flex items-start gap-3">
-                    <svg class="w-6 h-6 text-indigo-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <p class="text-gray-700"><strong>${achievement.title}:</strong> ${achievement.description}</p>
-                </div>
-            `).join('');
-            document.getElementById('achievements-grid').innerHTML = achievementsHTML;
-
-            // Render notable projects
-            const projectsHTML = data.notableProjects.map(project => `
-                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">${project.name}</h3>
-                    <p class="text-sm text-gray-600 mb-2">${project.description}</p>
-                    <p class="text-xs text-indigo-600 font-semibold">${project.highlight}</p>
-                </div>
-            `).join('');
-            document.getElementById('projects-grid').innerHTML = projectsHTML;
-
-            // Set last updated date
-            document.getElementById('last-updated').textContent = new Date().toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long'
-            });
-
-            // Hide loading, show content
+            document.getElementById('resume-content').innerHTML = html;
             document.getElementById('loading').style.display = 'none';
             document.getElementById('resume-content').style.display = 'block';
         }
 
-        // Print functionality
         document.addEventListener('keydown', function(event) {
             if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
                 event.preventDefault();
@@ -351,7 +513,6 @@
             }
         });
 
-        // Load resume on page load
         window.addEventListener('DOMContentLoaded', loadResumeData);
     </script>
 

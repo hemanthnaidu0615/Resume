@@ -27,7 +27,6 @@
             }
         }
 
-        /* Header */
         header {
             text-align: center;
             border-bottom: 3px double #334155;
@@ -71,7 +70,6 @@
             color: #94A3B8;
         }
 
-        /* Sections */
         section {
             margin-bottom: 35px;
         }
@@ -93,7 +91,6 @@
             color: #1E293B;
         }
 
-        /* Summary */
         .summary {
             font-size: 15px;
             line-height: 1.8;
@@ -101,7 +98,6 @@
             color: #334155;
         }
 
-        /* Education */
         .education-item {
             margin-bottom: 20px;
         }
@@ -122,7 +118,6 @@
             color: #64748B;
         }
 
-        /* Skills */
         .skills-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -142,7 +137,6 @@
             line-height: 1.8;
         }
 
-        /* Experience */
         .experience-item {
             margin-bottom: 30px;
             page-break-inside: avoid;
@@ -244,7 +238,6 @@
             font-style: normal;
         }
 
-        /* Achievements */
         .achievements-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -270,7 +263,6 @@
             color: #334155;
         }
 
-        /* Projects */
         .projects-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -298,6 +290,71 @@
             font-style: italic;
             color: #64748B;
             margin-top: 6px;
+        }
+
+        .cert-item, .award-item, .pub-item {
+            margin-bottom: 15px;
+        }
+
+        .cert-name, .award-title-text, .pub-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .cert-details, .award-details, .pub-details {
+            font-size: 13px;
+            color: #64748B;
+            font-style: italic;
+        }
+
+        .languages-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .language-item {
+            font-size: 14px;
+        }
+
+        .language-name {
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .language-level {
+            color: #64748B;
+            font-style: italic;
+        }
+
+        .interests-list {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .volunteer-item {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #E2E8F0;
+        }
+
+        .volunteer-org {
+            font-size: 15px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .volunteer-role {
+            font-size: 14px;
+            font-style: italic;
+            color: #475569;
+        }
+
+        .volunteer-dates {
+            font-size: 13px;
+            color: #64748B;
         }
 
         @media (max-width: 768px) {
@@ -330,10 +387,9 @@
 
     <div id="loading">Loading resume data...</div>
 
-    <div id="resume-content" style="display: none;">
-        <!-- Content will be generated here -->
-    </div>
+    <div id="resume-content" style="display: none;"></div>
 
+    <script src="../resume-utils.js"></script>
     <script>
         async function loadResume() {
             try {
@@ -346,11 +402,11 @@
         }
 
         function renderResume(data) {
-            const { personal, education, skills, experience, achievements, notableProjects } = data;
+            const { personal, education, skills, experience, achievements, notableProjects, certifications, languages, projects, volunteer, awards, publications, courses, speaking, patents, interests, references } = data;
 
             document.getElementById('page-title').textContent = `${personal.name} - Curriculum Vitae`;
 
-            const html = `
+            let html = `
                 <header>
                     <h1>${personal.name}</h1>
                     <div class="title">${personal.title}</div>
@@ -358,8 +414,8 @@
                         <span class="contact-item">${personal.email}</span>
                         ${personal.phone ? `<span class="contact-item">${personal.phone}</span>` : ''}
                         <span class="contact-item">${personal.location}</span>
-                        ${personal.linkedin ? `<span class="contact-item">${personal.linkedin.replace('https://', '')}</span>` : ''}
-                        ${personal.github ? `<span class="contact-item">${personal.github.replace('https://', '')}</span>` : ''}
+                        ${personal.linkedin ? `<span class="contact-item">${ResumeUtils.formatURL(personal.linkedin)}</span>` : ''}
+                        ${personal.github ? `<span class="contact-item">${ResumeUtils.formatURL(personal.github)}</span>` : ''}
                     </div>
                 </header>
 
@@ -375,6 +431,7 @@
                             <h3>${edu.degree}</h3>
                             <div class="institution">${edu.institution}</div>
                             <div class="details">${edu.location} | CGPA: ${edu.cgpa} | Graduated ${edu.year}</div>
+                            ${edu.honors ? `<div class="details" style="font-style: italic;">${edu.honors}</div>` : ''}
                         </div>
                     `).join('')}
                 </section>
@@ -434,7 +491,19 @@
                     </div>
                 </section>
 
-                ${notableProjects && notableProjects.length ? `
+                ${ResumeUtils.hasData(certifications) ? `
+                    <section>
+                        <h2>Certifications</h2>
+                        ${certifications.map(cert => `
+                            <div class="cert-item">
+                                <div class="cert-name">${cert.name}</div>
+                                <div class="cert-details">${cert.issuer} | ${cert.date}${cert.expiryDate ? ' – ' + cert.expiryDate : ''}${cert.credentialId ? ' | ID: ' + cert.credentialId : ''}</div>
+                            </div>
+                        `).join('')}
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(notableProjects) ? `
                     <section>
                         <h2>Featured Projects</h2>
                         <div class="projects-grid">
@@ -449,7 +518,110 @@
                     </section>
                 ` : ''}
 
-                ${achievements && achievements.length ? `
+                ${ResumeUtils.hasData(projects) ? `
+                    <section>
+                        <h2>Personal Projects</h2>
+                        ${projects.map(project => `
+                            <div class="project">
+                                <div class="project-name">${project.name}${project.url ? ` – <a href="${project.url}" style="color: #64748B; font-size: 13px;">${ResumeUtils.formatURL(project.url)}</a>` : ''}</div>
+                                <div class="project-desc">${project.description}</div>
+                                ${project.highlights ? `
+                                    <ul>
+                                        ${project.highlights.map(h => `<li>${h}</li>`).join('')}
+                                    </ul>
+                                ` : ''}
+                                ${project.techStack ? `
+                                    <div class="tech-stack"><strong>Technologies:</strong> ${project.techStack.join(', ')}</div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(awards) ? `
+                    <section>
+                        <h2>Awards & Honors</h2>
+                        ${awards.map(award => `
+                            <div class="award-item">
+                                <div class="award-title-text">${award.title}</div>
+                                <div class="award-details">${award.issuer} | ${award.date}</div>
+                                ${award.description ? `<div class="project-desc">${award.description}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(publications) ? `
+                    <section>
+                        <h2>Publications</h2>
+                        ${publications.map(pub => `
+                            <div class="pub-item">
+                                <div class="pub-title">${pub.title}</div>
+                                <div class="pub-details">${pub.publisher} | ${pub.date}</div>
+                                ${pub.description ? `<div class="project-desc">${pub.description}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(speaking) ? `
+                    <section>
+                        <h2>Speaking Engagements</h2>
+                        ${speaking.map(talk => `
+                            <div class="pub-item">
+                                <div class="pub-title">${talk.title}</div>
+                                <div class="pub-details">${talk.event} | ${talk.location} | ${talk.date}</div>
+                                ${talk.description ? `<div class="project-desc">${talk.description}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(volunteer) ? `
+                    <section>
+                        <h2>Volunteer Experience</h2>
+                        ${volunteer.map(vol => `
+                            <div class="volunteer-item">
+                                <div class="volunteer-org">${vol.organization}</div>
+                                <div class="volunteer-role">${vol.role}</div>
+                                <div class="volunteer-dates">${vol.startDate} – ${vol.endDate || 'Present'}</div>
+                                ${vol.description ? `<div class="project-desc">${vol.description}</div>` : ''}
+                                ${vol.highlights ? `
+                                    <ul>
+                                        ${vol.highlights.map(h => `<li>${h}</li>`).join('')}
+                                    </ul>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(courses) ? `
+                    <section>
+                        <h2>Courses & Training</h2>
+                        ${courses.map(course => `
+                            <div class="cert-item">
+                                <div class="cert-name">${course.name}</div>
+                                <div class="cert-details">${course.provider} | ${course.date}</div>
+                            </div>
+                        `).join('')}
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(patents) ? `
+                    <section>
+                        <h2>Patents</h2>
+                        ${patents.map(patent => `
+                            <div class="pub-item">
+                                <div class="pub-title">${patent.title}</div>
+                                <div class="pub-details">${patent.patentNumber} | ${patent.status} | ${patent.date}</div>
+                                ${patent.description ? `<div class="project-desc">${patent.description}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(achievements) ? `
                     <section>
                         <h2>Key Achievements</h2>
                         <div class="achievements-grid">
@@ -459,6 +631,44 @@
                                 </div>
                             `).join('')}
                         </div>
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(languages) ? `
+                    <section>
+                        <h2>Languages</h2>
+                        <div class="languages-grid">
+                            ${languages.map(lang => `
+                                <div class="language-item">
+                                    <span class="language-name">${lang.language}</span>
+                                    <span class="language-level"> – ${lang.proficiency}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(interests) ? `
+                    <section>
+                        <h2>Interests</h2>
+                        <div class="interests-list">${interests.join(' • ')}</div>
+                    </section>
+                ` : ''}
+
+                ${ResumeUtils.hasData(references) ? `
+                    <section>
+                        <h2>References</h2>
+                        ${references[0].name === 'Available upon request' ? `
+                            <div class="project-desc" style="font-style: italic;">Available upon request</div>
+                        ` : `
+                            ${references.map(ref => `
+                                <div class="cert-item">
+                                    <div class="cert-name">${ref.name}</div>
+                                    <div class="cert-details">${ref.title}${ref.company ? ' at ' + ref.company : ''}</div>
+                                    ${ref.email ? `<div class="cert-details">${ref.email}${ref.phone ? ' | ' + ref.phone : ''}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        `}
                     </section>
                 ` : ''}
             `;
