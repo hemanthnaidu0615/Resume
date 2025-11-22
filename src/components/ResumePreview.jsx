@@ -9,6 +9,12 @@ import ElegantTemplate from './templates/ElegantTemplate'
 import TechTemplate from './templates/TechTemplate'
 import SidebarTemplate from './templates/SidebarTemplate'
 import TimelineTemplate from './templates/TimelineTemplate'
+// Role-based templates
+import FrontendDevTemplate from './templates/FrontendDevTemplate'
+import DevOpsTemplate from './templates/DevOpsTemplate'
+import ProductManagerTemplate from './templates/ProductManagerTemplate'
+import DataScienceTemplate from './templates/DataScienceTemplate'
+import ATSOptimizedTemplate from './templates/ATSOptimizedTemplate'
 
 const templates = {
   professional: ProfessionalTemplate,
@@ -21,6 +27,12 @@ const templates = {
   tech: TechTemplate,
   sidebar: SidebarTemplate,
   timeline: TimelineTemplate,
+  // Role-based templates
+  frontend: FrontendDevTemplate,
+  devops: DevOpsTemplate,
+  'product-manager': ProductManagerTemplate,
+  'data-science': DataScienceTemplate,
+  'ats-optimized': ATSOptimizedTemplate,
 }
 
 export default function ResumePreview() {

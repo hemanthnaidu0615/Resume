@@ -1,15 +1,56 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useResume } from './context/ResumeContext'
 import Sidebar from './components/Sidebar'
 import ResumePreview from './components/ResumePreview'
 import EditorPanel from './components/editor/EditorPanel'
 import TemplateSelector from './components/TemplateSelector'
 import ExportModal from './components/ExportModal'
+import ResumeWizard from './components/wizard/ResumeWizard'
+import ATSChecker from './components/ATSChecker'
+import JDMatcher from './components/JDMatcher'
+import AchievementGenerator from './components/AchievementGenerator'
+import { Sparkles, Eye, Edit3, Layout, Shield, Target, Download, Wand2 } from 'lucide-react'
 
 function App() {
   const [activeTab, setActiveTab] = useState('preview')
   const [showExport, setShowExport] = useState(false)
-  const { activeTemplate, setActiveTemplate, themeColor, setThemeColor } = useResume()
+  const [showWizard, setShowWizard] = useState(false)
+  const { activeTemplate, setActiveTemplate, themeColor, setThemeColor, resumeData } = useResume()
+
+  // Check if this is a new user (no saved data)
+  useEffect(() => {
+    const hasSeenWizard = localStorage.getItem('resume_wizard_completed')
+    const hasSavedData = localStorage.getItem('resume_data')
+
+    // Show wizard for new users
+    if (!hasSeenWizard && !hasSavedData) {
+      setShowWizard(true)
+    }
+  }, [])
+
+  const handleWizardComplete = () => {
+    localStorage.setItem('resume_wizard_completed', 'true')
+    setShowWizard(false)
+    setActiveTab('preview')
+  }
+
+  const startNewResume = () => {
+    setShowWizard(true)
+  }
+
+  // Show wizard mode
+  if (showWizard) {
+    return <ResumeWizard onComplete={handleWizardComplete} />
+  }
+
+  const tabs = [
+    { id: 'preview', label: 'Preview', icon: Eye },
+    { id: 'edit', label: 'Edit', icon: Edit3 },
+    { id: 'templates', label: 'Templates', icon: Layout },
+    { id: 'ats', label: 'ATS Check', icon: Shield },
+    { id: 'jd-match', label: 'JD Match', icon: Target },
+    { id: 'generator', label: 'AI Writer', icon: Wand2 },
+  ]
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -26,36 +67,41 @@ function App() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <button
-              onClick={() => setActiveTab('preview')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === 'preview' ? 'bg-primary-100 text-primary-700' : 'text-gray-600 hover:bg-gray-100'
-              }`}
+              onClick={startNewResume}
+              className="flex items-center gap-2 px-3 py-2 text-primary-600 hover:bg-primary-50 rounded-lg font-medium transition-colors text-sm"
             >
-              Preview
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden md:inline">New Resume Wizard</span>
             </button>
-            <button
-              onClick={() => setActiveTab('edit')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === 'edit' ? 'bg-primary-100 text-primary-700' : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              Edit Content
-            </button>
-            <button
-              onClick={() => setActiveTab('templates')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === 'templates' ? 'bg-primary-100 text-primary-700' : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              Templates
-            </button>
+
+            <div className="w-px h-6 bg-gray-200 mx-2" />
+
+            {tabs.map(tab => {
+              const Icon = tab.icon
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    activeTab === tab.id
+                      ? 'bg-primary-100 text-primary-700'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="hidden lg:inline">{tab.label}</span>
+                </button>
+              )
+            })}
+
             <button
               onClick={() => setShowExport(true)}
-              className="btn-primary ml-2"
+              className="flex items-center gap-2 ml-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors text-sm"
             >
-              Export
+              <Download className="w-4 h-4" />
+              <span className="hidden md:inline">Export</span>
             </button>
           </div>
         </div>
@@ -63,19 +109,29 @@ function App() {
 
       {/* Main Content */}
       <div className="flex">
-        {/* Sidebar */}
-        <Sidebar
-          themeColor={themeColor}
-          setThemeColor={setThemeColor}
-          activeTemplate={activeTemplate}
-          setActiveTemplate={setActiveTemplate}
-        />
+        {/* Sidebar - only show for certain tabs */}
+        {['preview', 'edit', 'templates'].includes(activeTab) && (
+          <Sidebar
+            themeColor={themeColor}
+            setThemeColor={setThemeColor}
+            activeTemplate={activeTemplate}
+            setActiveTemplate={setActiveTemplate}
+          />
+        )}
 
         {/* Main Area */}
-        <main className="flex-1 p-6 overflow-auto" style={{ height: 'calc(100vh - 64px)' }}>
+        <main
+          className={`flex-1 p-6 overflow-auto ${
+            ['ats', 'jd-match', 'generator'].includes(activeTab) ? 'max-w-5xl mx-auto' : ''
+          }`}
+          style={{ height: 'calc(100vh - 64px)' }}
+        >
           {activeTab === 'preview' && <ResumePreview />}
           {activeTab === 'edit' && <EditorPanel />}
           {activeTab === 'templates' && <TemplateSelector />}
+          {activeTab === 'ats' && <ATSChecker />}
+          {activeTab === 'jd-match' && <JDMatcher />}
+          {activeTab === 'generator' && <AchievementGenerator />}
         </main>
       </div>
 
