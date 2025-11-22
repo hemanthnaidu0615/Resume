@@ -12,10 +12,20 @@
     "type": "git",
     "url": "https://github.com/hemanthnaidu0615/Resume"
   },
-  "keywords": ["resume", "builder", "react", "vite", "tailwind"],
+  "keywords": [
+    "resume",
+    "builder",
+    "react",
+    "vite",
+    "tailwind"
+  ],
   "author": "Hemanth Naidu",
   "license": "MIT",
   "dependencies": {
+    "@ant-design/icons": "^6.1.0",
+    "@tailwindcss/postcss": "^4.1.17",
+    "antd": "^6.0.0",
+    "dayjs": "^1.11.19",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

@@ -174,9 +174,12 @@ export const defaultResumeData = {
 export const emptySection = {
   education: { degree: '', institution: '', location: '', cgpa: '', year: '' },
   experience: { company: '', location: '', position: '', startDate: '', endDate: '', projects: [] },
-  project: { name: '', role: '', description: '', achievements: [], techStack: [] },
+  project: { name: '', role: '', description: '', techStack: [], url: '', github: '', startDate: '', endDate: '', highlights: [] },
   certification: { name: '', issuer: '', date: '', credentialId: '', url: '' },
   award: { title: '', issuer: '', date: '', description: '' },
   language: { language: '', proficiency: '' },
-  achievement: { title: '', description: '' }
+  achievement: { title: '', description: '' },
+  volunteer: { organization: '', role: '', startDate: '', endDate: '', description: '', highlights: [] },
+  publication: { title: '', type: 'journal', publisher: '', date: '', authors: '', url: '', description: '' },
+  reference: { name: '', title: '', company: '', email: '', phone: '', relationship: '' }
 }
