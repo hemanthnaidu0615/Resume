@@ -1,7 +1,16 @@
 import { Mail, Phone, MapPin, Linkedin, Github, Globe, ExternalLink } from 'lucide-react'
 
 export default function FrontendDevTemplate({ data, themeColor = '#3B82F6' }) {
-  const { personal, experience, education, skills, achievements, projects } = data
+  const {
+    personal, experience, education, skills, achievements, projects,
+    certifications, awards, volunteer, publications, languages, interests, references
+  } = data
+
+  const hasContent = (arr) => arr && arr.length > 0 && arr.some(item => {
+    if (typeof item === 'string') return item.trim()
+    if (typeof item === 'object') return Object.values(item).some(v => v && String(v).trim())
+    return false
+  })
 
   return (
     <div className="bg-white min-h-[1056px] p-8 font-sans text-gray-800" style={{ width: '816px' }}>
@@ -168,9 +177,53 @@ export default function FrontendDevTemplate({ data, themeColor = '#3B82F6' }) {
         </section>
       )}
 
+      {/* Projects */}
+      {hasContent(projects) && (
+        <section className="mb-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-3 pb-1 border-b-2" style={{ borderColor: themeColor }}>
+            Side Projects
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            {projects.slice(0, 4).map((project, i) => (
+              <div key={i} className="bg-gray-50 rounded-lg p-3">
+                <h3 className="font-semibold text-gray-900">{project.name}</h3>
+                {project.description && <p className="text-sm text-gray-600 mt-1">{project.description}</p>}
+                {project.techStack && project.techStack.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {project.techStack.slice(0, 4).map((tech, j) => (
+                      <span key={j} className="px-2 py-0.5 text-xs rounded" style={{ backgroundColor: `${themeColor}15`, color: themeColor }}>{tech}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Certifications */}
+      {hasContent(certifications) && (
+        <section className="mb-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-3 pb-1 border-b-2" style={{ borderColor: themeColor }}>
+            Certifications
+          </h2>
+          <div className="grid grid-cols-2 gap-2">
+            {certifications.map((cert, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <span style={{ color: themeColor }}>✓</span>
+                <div>
+                  <span className="font-medium text-gray-900">{cert.name}</span>
+                  <span className="text-gray-500 text-sm ml-1">- {cert.issuer}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Notable Achievements */}
-      {achievements?.filter(a => a.title).length > 0 && (
-        <section>
+      {hasContent(achievements) && achievements.filter(a => a.title).length > 0 && (
+        <section className="mb-6">
           <h2 className="text-lg font-bold text-gray-900 mb-3 pb-1 border-b-2" style={{ borderColor: themeColor }}>
             Notable Achievements
           </h2>
@@ -186,6 +239,51 @@ export default function FrontendDevTemplate({ data, themeColor = '#3B82F6' }) {
             ))}
           </div>
         </section>
+      )}
+
+      {/* Awards */}
+      {hasContent(awards) && (
+        <section className="mb-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-3 pb-1 border-b-2" style={{ borderColor: themeColor }}>
+            Awards
+          </h2>
+          {awards.slice(0, 3).map((award, i) => (
+            <div key={i} className="mb-2">
+              <span className="font-medium text-gray-900">{award.title}</span>
+              {award.issuer && <span className="text-gray-500 text-sm"> - {award.issuer}</span>}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {/* Footer - Languages & Interests */}
+      {(hasContent(languages) || hasContent(interests)) && (
+        <div className="flex gap-6 pt-4 border-t border-gray-200">
+          {hasContent(languages) && (
+            <div>
+              <span className="font-semibold text-gray-900">Languages: </span>
+              <span className="text-gray-600">{languages.map(l => `${l.language} (${l.proficiency})`).join(' • ')}</span>
+            </div>
+          )}
+          {hasContent(interests) && (
+            <div>
+              <span className="font-semibold text-gray-900">Interests: </span>
+              <span className="text-gray-600">{interests.join(' • ')}</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* References */}
+      {hasContent(references) && references[0]?.name && (
+        <div className="mt-4 pt-3 border-t border-gray-200">
+          <span className="font-semibold text-gray-900">References: </span>
+          <span className="text-gray-600">
+            {references[0].name === 'Available upon request' && !references[0].title
+              ? 'Available upon request'
+              : references.map(r => r.name).join(', ')}
+          </span>
+        </div>
       )}
     </div>
   )

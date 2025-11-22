@@ -1,7 +1,16 @@
 import { Mail, Phone, MapPin, Linkedin, Github, Cloud, Server, Shield } from 'lucide-react'
 
 export default function DevOpsTemplate({ data, themeColor = '#F97316' }) {
-  const { personal, experience, education, skills, achievements, certifications } = data
+  const {
+    personal, experience, education, skills, achievements, certifications,
+    awards, volunteer, publications, projects, languages, interests, references
+  } = data
+
+  const hasContent = (arr) => arr && arr.length > 0 && arr.some(item => {
+    if (typeof item === 'string') return item.trim()
+    if (typeof item === 'object') return Object.values(item).some(v => v && String(v).trim())
+    return false
+  })
 
   return (
     <div className="bg-slate-900 min-h-[1056px] p-8 font-mono text-slate-200" style={{ width: '816px' }}>
@@ -163,7 +172,7 @@ export default function DevOpsTemplate({ data, themeColor = '#F97316' }) {
           )}
 
           {/* Key Metrics/Achievements */}
-          {achievements?.filter(a => a.title).length > 0 && (
+          {hasContent(achievements) && achievements.filter(a => a.title).length > 0 && (
             <section className="mt-6">
               <h2 className="text-sm font-bold text-white mb-3">KEY_METRICS</h2>
               <div className="grid grid-cols-2 gap-2">
@@ -176,7 +185,61 @@ export default function DevOpsTemplate({ data, themeColor = '#F97316' }) {
               </div>
             </section>
           )}
+
+          {/* Projects */}
+          {hasContent(projects) && (
+            <section className="mt-6">
+              <h2 className="text-sm font-bold text-white mb-3">SIDE_PROJECTS</h2>
+              <div className="space-y-2">
+                {projects.slice(0, 3).map((project, i) => (
+                  <div key={i} className="bg-slate-800 rounded p-2 border border-slate-700">
+                    <p className="text-sm font-bold text-white">{project.name}</p>
+                    {project.description && <p className="text-xs text-slate-400">{project.description}</p>}
+                    {project.techStack && project.techStack.length > 0 && (
+                      <p className="text-xs text-slate-600 mt-1">[{project.techStack.join(', ')}]</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Awards */}
+          {hasContent(awards) && (
+            <section className="mt-6">
+              <h2 className="text-sm font-bold text-white mb-3">AWARDS</h2>
+              {awards.slice(0, 3).map((award, i) => (
+                <p key={i} className="text-xs text-slate-400">★ {award.title} {award.issuer && `- ${award.issuer}`}</p>
+              ))}
+            </section>
+          )}
         </div>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-6 pt-4 border-t border-slate-700 flex flex-wrap gap-6 text-xs">
+        {hasContent(languages) && (
+          <div>
+            <span className="text-white">Languages: </span>
+            <span className="text-slate-400">{languages.map(l => `${l.language} (${l.proficiency})`).join(' | ')}</span>
+          </div>
+        )}
+        {hasContent(interests) && (
+          <div>
+            <span className="text-white">Interests: </span>
+            <span className="text-slate-400">{interests.join(' | ')}</span>
+          </div>
+        )}
+        {hasContent(references) && references[0]?.name && (
+          <div>
+            <span className="text-white">References: </span>
+            <span className="text-slate-400">
+              {references[0].name === 'Available upon request' && !references[0].title
+                ? 'available_upon_request'
+                : references.map(r => r.name).join(', ')}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )

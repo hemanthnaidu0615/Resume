@@ -1,9 +1,15 @@
 import { useState } from 'react'
 import { useResume } from '../../context/ResumeContext'
+import { Form, Input, Button, Card, Collapse, Space, Typography, Tag, Alert, Row, Col, Tooltip, Empty } from 'antd'
+import { PlusOutlined, DeleteOutlined, DownOutlined, ProjectOutlined, CalendarOutlined, EnvironmentOutlined, TagsOutlined } from '@ant-design/icons'
+
+const { TextArea } = Input
+const { Text, Title } = Typography
+const { Panel } = Collapse
 
 export default function ExperienceSection() {
   const { resumeData, updateSection } = useResume()
-  const [expandedExp, setExpandedExp] = useState(0)
+  const [expandedExp, setExpandedExp] = useState(['0'])
 
   const experience = resumeData.experience || []
 
@@ -19,7 +25,7 @@ export default function ExperienceSection() {
         projects: []
       }
     ])
-    setExpandedExp(experience.length)
+    setExpandedExp([String(experience.length)])
   }
 
   const updateExperience = (index, field, value) => {
@@ -71,162 +77,272 @@ export default function ExperienceSection() {
     updateSection('experience', updated)
   }
 
+  const isExpValid = (exp) => {
+    return exp.company?.trim() && exp.position?.trim() && exp.startDate?.trim()
+  }
+
   return (
-    <div className="space-y-4">
+    <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">Work Experience</h3>
-        <button onClick={addExperience} className="btn-primary text-sm">
-          + Add Experience
-        </button>
+        <Title level={4} className="!mb-0">Work Experience</Title>
+        <Button type="primary" icon={<PlusOutlined />} onClick={addExperience}>
+          Add Experience
+        </Button>
       </div>
 
-      {experience.map((exp, expIndex) => (
-        <div key={expIndex} className="border rounded-lg overflow-hidden">
-          <div
-            className="p-4 bg-gray-50 cursor-pointer flex justify-between items-center"
-            onClick={() => setExpandedExp(expandedExp === expIndex ? -1 : expIndex)}
-          >
-            <div>
-              <p className="font-medium text-gray-900">{exp.company || 'New Company'}</p>
-              <p className="text-sm text-gray-500">{exp.position || 'Position'}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-gray-400">{expandedExp === expIndex ? '▼' : '▶'}</span>
-              <button
-                onClick={(e) => { e.stopPropagation(); removeExperience(expIndex) }}
-                className="text-red-500 hover:text-red-700 text-sm"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-
-          {expandedExp === expIndex && (
-            <div className="p-4 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
-                  <input
-                    type="text"
-                    value={exp.company || ''}
-                    onChange={(e) => updateExperience(expIndex, 'company', e.target.value)}
-                    className="input-field"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                  <input
-                    type="text"
-                    value={exp.location || ''}
-                    onChange={(e) => updateExperience(expIndex, 'location', e.target.value)}
-                    className="input-field"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Position/Title</label>
-                <input
-                  type="text"
-                  value={exp.position || ''}
-                  onChange={(e) => updateExperience(expIndex, 'position', e.target.value)}
-                  className="input-field"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-                  <input
-                    type="text"
-                    value={exp.startDate || ''}
-                    onChange={(e) => updateExperience(expIndex, 'startDate', e.target.value)}
-                    className="input-field"
-                    placeholder="Mar 2024"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                  <input
-                    type="text"
-                    value={exp.endDate || ''}
-                    onChange={(e) => updateExperience(expIndex, 'endDate', e.target.value)}
-                    className="input-field"
-                    placeholder="Present"
-                  />
-                </div>
-              </div>
-
-              {/* Projects */}
-              <div className="border-t pt-4 mt-4">
-                <div className="flex justify-between items-center mb-3">
-                  <h4 className="font-medium text-gray-700">Projects</h4>
-                  <button
-                    onClick={() => addProject(expIndex)}
-                    className="text-sm text-primary-600 hover:text-primary-700"
-                  >
-                    + Add Project
-                  </button>
-                </div>
-
-                {exp.projects?.map((project, projIndex) => (
-                  <div key={projIndex} className="bg-gray-50 rounded-lg p-4 mb-3">
-                    <div className="flex justify-between mb-3">
-                      <span className="font-medium text-sm">{project.name || 'New Project'}</span>
-                      <button
-                        onClick={() => removeProject(expIndex, projIndex)}
-                        className="text-red-500 text-sm"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                    <div className="space-y-3">
-                      <input
-                        type="text"
-                        value={project.name || ''}
-                        onChange={(e) => updateProject(expIndex, projIndex, 'name', e.target.value)}
-                        className="input-field"
-                        placeholder="Project Name"
-                      />
-                      <input
-                        type="text"
-                        value={project.role || ''}
-                        onChange={(e) => updateProject(expIndex, projIndex, 'role', e.target.value)}
-                        className="input-field"
-                        placeholder="Your Role"
-                      />
-                      <textarea
-                        value={project.description || ''}
-                        onChange={(e) => updateProject(expIndex, projIndex, 'description', e.target.value)}
-                        className="input-field"
-                        placeholder="Brief description..."
-                        rows={2}
-                      />
-                      <textarea
-                        value={(project.achievements || []).join('\n')}
-                        onChange={(e) => updateProject(expIndex, projIndex, 'achievements', e.target.value.split('\n').filter(a => a.trim()))}
-                        className="input-field"
-                        placeholder="Achievements (one per line)"
-                        rows={3}
-                      />
-                      <input
-                        type="text"
-                        value={(project.techStack || []).join(', ')}
-                        onChange={(e) => updateProject(expIndex, projIndex, 'techStack', e.target.value.split(',').map(t => t.trim()).filter(t => t))}
-                        className="input-field"
-                        placeholder="Tech Stack (comma separated)"
-                      />
-                    </div>
+      {experience.length === 0 ? (
+        <Empty
+          description="No experience added yet"
+          className="py-8"
+        >
+          <Button type="primary" onClick={addExperience}>Add Your First Experience</Button>
+        </Empty>
+      ) : (
+        <Collapse
+          activeKey={expandedExp}
+          onChange={(keys) => setExpandedExp(keys)}
+          expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 0 : -90} />}
+        >
+          {experience.map((exp, expIndex) => (
+            <Panel
+              key={String(expIndex)}
+              header={
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <Text strong>{exp.company || 'New Company'}</Text>
+                    <Text type="secondary" className="ml-2">{exp.position || 'Position'}</Text>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
+                  {!isExpValid(exp) && (
+                    <Tag color="warning">Incomplete</Tag>
+                  )}
+                </div>
+              }
+              extra={
+                <Button
+                  type="text"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={(e) => { e.stopPropagation(); removeExperience(expIndex) }}
+                  size="small"
+                >
+                  Delete
+                </Button>
+              }
+            >
+              <Form layout="vertical">
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <Form.Item
+                      label={<Text strong>Company Name</Text>}
+                      required
+                      validateStatus={!exp.company?.trim() ? 'error' : 'success'}
+                      help={!exp.company?.trim() ? 'Company name is required' : null}
+                    >
+                      <Input
+                        value={exp.company || ''}
+                        onChange={(e) => updateExperience(expIndex, 'company', e.target.value)}
+                        placeholder="Company Name"
+                        size="large"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label={<Text strong>Location</Text>}>
+                      <Input
+                        prefix={<EnvironmentOutlined className="text-gray-400" />}
+                        value={exp.location || ''}
+                        onChange={(e) => updateExperience(expIndex, 'location', e.target.value)}
+                        placeholder="City, Country"
+                        size="large"
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
 
-      {experience.length === 0 && (
-        <p className="text-center text-gray-500 py-8">No experience added yet. Click "Add Experience" to get started.</p>
+                <Form.Item
+                  label={<Text strong>Position/Title</Text>}
+                  required
+                  validateStatus={!exp.position?.trim() ? 'error' : 'success'}
+                  help={!exp.position?.trim() ? 'Position is required' : null}
+                >
+                  <Input
+                    value={exp.position || ''}
+                    onChange={(e) => updateExperience(expIndex, 'position', e.target.value)}
+                    placeholder="Software Engineer, Product Manager, etc."
+                    size="large"
+                  />
+                </Form.Item>
+
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <Form.Item
+                      label={<Text strong>Start Date</Text>}
+                      required
+                      validateStatus={!exp.startDate?.trim() ? 'error' : 'success'}
+                      help={!exp.startDate?.trim() ? 'Start date is required' : null}
+                    >
+                      <Input
+                        prefix={<CalendarOutlined className="text-gray-400" />}
+                        value={exp.startDate || ''}
+                        onChange={(e) => updateExperience(expIndex, 'startDate', e.target.value)}
+                        placeholder="Mar 2024"
+                        size="large"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      label={<Text strong>End Date</Text>}
+                      extra={<Text type="secondary" className="text-xs">Leave empty or write "Present" for current job</Text>}
+                    >
+                      <Input
+                        prefix={<CalendarOutlined className="text-gray-400" />}
+                        value={exp.endDate || ''}
+                        onChange={(e) => updateExperience(expIndex, 'endDate', e.target.value)}
+                        placeholder="Present"
+                        size="large"
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                {/* Projects Section */}
+                <div className="border-t pt-4 mt-4">
+                  <div className="flex justify-between items-center mb-3">
+                    <Space>
+                      <ProjectOutlined />
+                      <Text strong>Projects & Achievements</Text>
+                    </Space>
+                    <Button
+                      type="dashed"
+                      icon={<PlusOutlined />}
+                      onClick={() => addProject(expIndex)}
+                      size="small"
+                    >
+                      Add Project
+                    </Button>
+                  </div>
+
+                  {exp.projects?.length === 0 && (
+                    <Alert
+                      message="Add projects to showcase your work"
+                      description="Projects help demonstrate your impact. Include key achievements and technologies used."
+                      type="info"
+                      showIcon
+                      className="mb-3"
+                    />
+                  )}
+
+                  {exp.projects?.map((project, projIndex) => (
+                    <Card
+                      key={projIndex}
+                      size="small"
+                      className="mb-3"
+                      title={
+                        <Space>
+                          <ProjectOutlined />
+                          <span>{project.name || 'New Project'}</span>
+                        </Space>
+                      }
+                      extra={
+                        <Button
+                          type="text"
+                          danger
+                          icon={<DeleteOutlined />}
+                          onClick={() => removeProject(expIndex, projIndex)}
+                          size="small"
+                        />
+                      }
+                    >
+                      <Form layout="vertical">
+                        <Row gutter={16}>
+                          <Col span={12}>
+                            <Form.Item
+                              label="Project Name"
+                              validateStatus={!project.name?.trim() ? 'warning' : undefined}
+                            >
+                              <Input
+                                value={project.name || ''}
+                                onChange={(e) => updateProject(expIndex, projIndex, 'name', e.target.value)}
+                                placeholder="Project Name"
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col span={12}>
+                            <Form.Item label="Your Role">
+                              <Input
+                                value={project.role || ''}
+                                onChange={(e) => updateProject(expIndex, projIndex, 'role', e.target.value)}
+                                placeholder="Lead Developer, Contributor, etc."
+                              />
+                            </Form.Item>
+                          </Col>
+                        </Row>
+
+                        <Form.Item label="Description">
+                          <TextArea
+                            value={project.description || ''}
+                            onChange={(e) => updateProject(expIndex, projIndex, 'description', e.target.value)}
+                            placeholder="Brief description of the project..."
+                            rows={2}
+                          />
+                        </Form.Item>
+
+                        <Form.Item
+                          label={
+                            <Tooltip title="Use action verbs and quantify results when possible">
+                              <span>Key Achievements (one per line)</span>
+                            </Tooltip>
+                          }
+                          extra={<Text type="secondary" className="text-xs">Tip: Start with action verbs like "Developed", "Improved", "Reduced"</Text>}
+                        >
+                          <TextArea
+                            value={(project.achievements || []).join('\n')}
+                            onChange={(e) => updateProject(expIndex, projIndex, 'achievements', e.target.value.split('\n').filter(a => a.trim()))}
+                            placeholder="Increased performance by 40%&#10;Reduced load time from 3s to 1s&#10;Led team of 5 developers"
+                            rows={4}
+                          />
+                        </Form.Item>
+
+                        <Form.Item
+                          label={
+                            <Space>
+                              <TagsOutlined />
+                              <span>Tech Stack (comma separated)</span>
+                            </Space>
+                          }
+                        >
+                          <Input
+                            value={(project.techStack || []).join(', ')}
+                            onChange={(e) => updateProject(expIndex, projIndex, 'techStack', e.target.value.split(',').map(t => t.trim()).filter(t => t))}
+                            placeholder="React, Node.js, PostgreSQL, AWS"
+                          />
+                          {project.techStack?.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {project.techStack.map((tech, i) => (
+                                <Tag key={i} color="blue">{tech}</Tag>
+                              ))}
+                            </div>
+                          )}
+                        </Form.Item>
+                      </Form>
+                    </Card>
+                  ))}
+                </div>
+              </Form>
+            </Panel>
+          ))}
+        </Collapse>
+      )}
+
+      {experience.some(exp => !isExpValid(exp)) && (
+        <Alert
+          message="Incomplete Experience Entries"
+          description="Some experience entries are missing required fields (company, position, start date). Complete them for a professional resume."
+          type="warning"
+          showIcon
+          className="mt-4"
+        />
       )}
     </div>
   )

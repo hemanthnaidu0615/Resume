@@ -1,7 +1,16 @@
 import { Mail, Phone, MapPin, Linkedin, TrendingUp, Users, Target, Award } from 'lucide-react'
 
 export default function ProductManagerTemplate({ data, themeColor = '#8B5CF6' }) {
-  const { personal, experience, education, skills, achievements } = data
+  const {
+    personal, experience, education, skills, achievements,
+    certifications, awards, volunteer, publications, projects, languages, interests, references
+  } = data
+
+  const hasContent = (arr) => arr && arr.length > 0 && arr.some(item => {
+    if (typeof item === 'string') return item.trim()
+    if (typeof item === 'object') return Object.values(item).some(v => v && String(v).trim())
+    return false
+  })
 
   return (
     <div className="bg-white min-h-[1056px] p-8 font-sans" style={{ width: '816px' }}>
@@ -167,6 +176,39 @@ export default function ProductManagerTemplate({ data, themeColor = '#8B5CF6' })
             </section>
           )}
 
+          {/* Certifications */}
+          {hasContent(certifications) && (
+            <section>
+              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Certifications</h2>
+              {certifications.slice(0, 3).map((cert, i) => (
+                <div key={i} className="mb-2">
+                  <p className="font-medium text-gray-900 text-sm">{cert.name}</p>
+                  <p className="text-gray-500 text-xs">{cert.issuer}</p>
+                </div>
+              ))}
+            </section>
+          )}
+
+          {/* Awards */}
+          {hasContent(awards) && (
+            <section>
+              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Awards</h2>
+              {awards.slice(0, 3).map((award, i) => (
+                <p key={i} className="text-sm text-gray-700 mb-1">★ {award.title}</p>
+              ))}
+            </section>
+          )}
+
+          {/* Languages */}
+          {hasContent(languages) && (
+            <section>
+              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Languages</h2>
+              {languages.map((l, i) => (
+                <p key={i} className="text-sm text-gray-600">{l.language} - {l.proficiency}</p>
+              ))}
+            </section>
+          )}
+
           {/* Leadership Style / Philosophy */}
           <section className="p-4 rounded-lg" style={{ backgroundColor: `${themeColor}08` }}>
             <h2 className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
@@ -179,6 +221,43 @@ export default function ProductManagerTemplate({ data, themeColor = '#8B5CF6' })
           </section>
         </div>
       </div>
+
+      {/* Projects */}
+      {hasContent(projects) && (
+        <section className="mt-6">
+          <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Projects & Initiatives</h2>
+          <div className="grid grid-cols-2 gap-4">
+            {projects.slice(0, 4).map((project, i) => (
+              <div key={i} className="p-3 rounded-lg" style={{ backgroundColor: `${themeColor}05` }}>
+                <h3 className="font-semibold text-gray-900">{project.name}</h3>
+                {project.description && <p className="text-sm text-gray-600 mt-1">{project.description}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Footer */}
+      {(hasContent(interests) || hasContent(references)) && (
+        <div className="mt-6 pt-4 border-t border-gray-200 flex justify-between text-sm">
+          {hasContent(interests) && (
+            <div>
+              <span className="font-semibold text-gray-700">Interests: </span>
+              <span className="text-gray-600">{interests.join(' • ')}</span>
+            </div>
+          )}
+          {hasContent(references) && references[0]?.name && (
+            <div>
+              <span className="font-semibold text-gray-700">References: </span>
+              <span className="text-gray-600">
+                {references[0].name === 'Available upon request' && !references[0].title
+                  ? 'Available upon request'
+                  : references.map(r => r.name).join(', ')}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

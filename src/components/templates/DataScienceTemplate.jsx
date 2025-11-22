@@ -1,7 +1,16 @@
 import { Mail, Phone, MapPin, Linkedin, Github, BarChart3, Brain, Database, BookOpen } from 'lucide-react'
 
 export default function DataScienceTemplate({ data, themeColor = '#10B981' }) {
-  const { personal, experience, education, skills, achievements, publications, certifications } = data
+  const {
+    personal, experience, education, skills, achievements, publications, certifications,
+    awards, volunteer, projects, languages, interests, references
+  } = data
+
+  const hasContent = (arr) => arr && arr.length > 0 && arr.some(item => {
+    if (typeof item === 'string') return item.trim()
+    if (typeof item === 'object') return Object.values(item).some(v => v && String(v).trim())
+    return false
+  })
 
   return (
     <div className="bg-white min-h-[1056px] p-8 font-sans" style={{ width: '816px' }}>
@@ -197,7 +206,67 @@ export default function DataScienceTemplate({ data, themeColor = '#10B981' }) {
               </div>
             </section>
           )}
+
+          {/* Projects */}
+          {hasContent(projects) && (
+            <section className="mt-6">
+              <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <Database className="w-4 h-4" style={{ color: themeColor }} />
+                Research & Projects
+              </h2>
+              <div className="grid grid-cols-2 gap-3">
+                {projects.slice(0, 4).map((project, i) => (
+                  <div key={i} className="p-3 rounded-lg border-l-4" style={{ backgroundColor: `${themeColor}05`, borderColor: themeColor }}>
+                    <h3 className="font-semibold text-gray-900 text-sm">{project.name}</h3>
+                    {project.description && <p className="text-xs text-gray-600 mt-1">{project.description}</p>}
+                    {project.techStack && project.techStack.length > 0 && (
+                      <p className="text-xs text-gray-500 mt-1">Tools: {project.techStack.join(', ')}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Awards */}
+          {hasContent(awards) && (
+            <section className="mt-6">
+              <h2 className="text-sm font-bold text-gray-900 mb-3">Awards & Recognition</h2>
+              {awards.slice(0, 3).map((award, i) => (
+                <div key={i} className="mb-2">
+                  <span className="font-medium text-gray-900 text-sm">{award.title}</span>
+                  {award.issuer && <span className="text-gray-500 text-sm"> - {award.issuer}</span>}
+                </div>
+              ))}
+            </section>
+          )}
         </div>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-6 pt-4 border-t border-gray-200 flex flex-wrap gap-6 text-sm">
+        {hasContent(languages) && (
+          <div>
+            <span className="font-semibold text-gray-900">Languages: </span>
+            <span className="text-gray-600">{languages.map(l => `${l.language} (${l.proficiency})`).join(' | ')}</span>
+          </div>
+        )}
+        {hasContent(interests) && (
+          <div>
+            <span className="font-semibold text-gray-900">Research Interests: </span>
+            <span className="text-gray-600">{interests.join(' | ')}</span>
+          </div>
+        )}
+        {hasContent(references) && references[0]?.name && (
+          <div>
+            <span className="font-semibold text-gray-900">References: </span>
+            <span className="text-gray-600">
+              {references[0].name === 'Available upon request' && !references[0].title
+                ? 'Available upon request'
+                : references.map(r => r.name).join(', ')}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )

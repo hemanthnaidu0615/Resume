@@ -1,5 +1,14 @@
 export default function TimelineTemplate({ data, themeColor }) {
-  const { personal, education, skills, experience, achievements, languages, interests } = data
+  const {
+    personal, education, skills, experience, achievements, languages, interests,
+    certifications, awards, volunteer, publications, projects, references
+  } = data
+
+  const hasContent = (arr) => arr && arr.length > 0 && arr.some(item => {
+    if (typeof item === 'string') return item.trim()
+    if (typeof item === 'object') return Object.values(item).some(v => v && String(v).trim())
+    return false
+  })
 
   return (
     <div className="p-8">
@@ -96,9 +105,75 @@ export default function TimelineTemplate({ data, themeColor }) {
         </div>
       </section>
 
+      {/* Projects */}
+      {hasContent(projects) && (
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-center mb-4" style={{ color: themeColor }}>Projects</h2>
+          <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {projects.slice(0, 4).map((project, i) => (
+              <div key={i} className="p-3 bg-gray-50 rounded-lg">
+                <h3 className="font-bold text-gray-900">{project.name}</h3>
+                {project.description && <p className="text-sm text-gray-600 mt-1">{project.description}</p>}
+                {project.techStack && project.techStack.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {project.techStack.slice(0, 3).map((tech, j) => (
+                      <span key={j} className="px-2 py-0.5 text-xs rounded" style={{ backgroundColor: `${themeColor}20`, color: themeColor }}>{tech}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Certifications & Awards Row */}
+      {(hasContent(certifications) || hasContent(awards)) && (
+        <div className="grid grid-cols-2 gap-6 mb-8">
+          {hasContent(certifications) && (
+            <section className="text-center p-4 rounded-lg" style={{ backgroundColor: `${themeColor}08` }}>
+              <h3 className="font-bold mb-3" style={{ color: themeColor }}>Certifications</h3>
+              {certifications.slice(0, 3).map((cert, i) => (
+                <p key={i} className="text-sm text-gray-600 mb-1">{cert.name}</p>
+              ))}
+            </section>
+          )}
+          {hasContent(awards) && (
+            <section className="text-center p-4 rounded-lg" style={{ backgroundColor: `${themeColor}08` }}>
+              <h3 className="font-bold mb-3" style={{ color: themeColor }}>Awards</h3>
+              {awards.slice(0, 3).map((award, i) => (
+                <p key={i} className="text-sm text-gray-600 mb-1">{award.title}</p>
+              ))}
+            </section>
+          )}
+        </div>
+      )}
+
+      {/* Publications & Volunteer */}
+      {(hasContent(publications) || hasContent(volunteer)) && (
+        <div className="grid grid-cols-2 gap-6 mb-8">
+          {hasContent(publications) && (
+            <section className="text-center">
+              <h3 className="font-bold mb-2" style={{ color: themeColor }}>Publications</h3>
+              {publications.slice(0, 2).map((pub, i) => (
+                <p key={i} className="text-sm text-gray-600 mb-1">{pub.title}</p>
+              ))}
+            </section>
+          )}
+          {hasContent(volunteer) && (
+            <section className="text-center">
+              <h3 className="font-bold mb-2" style={{ color: themeColor }}>Volunteer</h3>
+              {volunteer.slice(0, 2).map((vol, i) => (
+                <p key={i} className="text-sm text-gray-600 mb-1">{vol.organization} - {vol.role}</p>
+              ))}
+            </section>
+          )}
+        </div>
+      )}
+
       {/* Footer grid */}
       <div className="grid grid-cols-3 gap-6 pt-6 border-t border-gray-200">
-        {achievements?.length > 0 && (
+        {hasContent(achievements) && (
           <section className="text-center">
             <h3 className="font-bold mb-2" style={{ color: themeColor }}>Achievements</h3>
             {achievements.slice(0, 3).map((a, i) => (
@@ -106,7 +181,7 @@ export default function TimelineTemplate({ data, themeColor }) {
             ))}
           </section>
         )}
-        {languages?.length > 0 && (
+        {hasContent(languages) && (
           <section className="text-center">
             <h3 className="font-bold mb-2" style={{ color: themeColor }}>Languages</h3>
             {languages.map((l, i) => (
@@ -114,13 +189,25 @@ export default function TimelineTemplate({ data, themeColor }) {
             ))}
           </section>
         )}
-        {interests?.length > 0 && (
+        {hasContent(interests) && (
           <section className="text-center">
             <h3 className="font-bold mb-2" style={{ color: themeColor }}>Interests</h3>
             <p className="text-sm text-gray-600">{interests.join(' • ')}</p>
           </section>
         )}
       </div>
+
+      {/* References */}
+      {hasContent(references) && references[0]?.name && (
+        <div className="mt-6 pt-4 border-t border-gray-200 text-center">
+          <h3 className="font-bold mb-2" style={{ color: themeColor }}>References</h3>
+          <p className="text-sm text-gray-600">
+            {references[0].name === 'Available upon request' && !references[0].title
+              ? 'Available upon request'
+              : references.map(r => r.name).join(' • ')}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

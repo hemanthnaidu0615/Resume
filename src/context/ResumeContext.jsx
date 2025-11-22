@@ -26,6 +26,24 @@ export function ResumeProvider({ children }) {
     return saved ? parseFloat(saved) : 1
   })
 
+  const [sectionVisibility, setSectionVisibility] = useState(() => {
+    const saved = localStorage.getItem('sectionVisibility')
+    return saved ? JSON.parse(saved) : {
+      experience: true,
+      education: true,
+      skills: true,
+      projects: true,
+      certifications: true,
+      achievements: true,
+      awards: true,
+      publications: true,
+      volunteer: true,
+      languages: true,
+      interests: true,
+      references: true,
+    }
+  })
+
   // Save to localStorage on changes
   useEffect(() => {
     localStorage.setItem('resumeData', JSON.stringify(resumeData))
@@ -46,6 +64,10 @@ export function ResumeProvider({ children }) {
   useEffect(() => {
     localStorage.setItem('pageScale', pageScale.toString())
   }, [pageScale])
+
+  useEffect(() => {
+    localStorage.setItem('sectionVisibility', JSON.stringify(sectionVisibility))
+  }, [sectionVisibility])
 
   const updatePersonal = (updates) => {
     setResumeData(prev => ({
@@ -96,6 +118,20 @@ export function ResumeProvider({ children }) {
     setThemeColor('#0ea5e9')
     setFontSize('medium')
     setPageScale(1)
+    setSectionVisibility({
+      experience: true,
+      education: true,
+      skills: true,
+      projects: true,
+      certifications: true,
+      achievements: true,
+      awards: true,
+      publications: true,
+      volunteer: true,
+      languages: true,
+      interests: true,
+      references: true,
+    })
   }
 
   const value = {
@@ -109,6 +145,8 @@ export function ResumeProvider({ children }) {
     setFontSize,
     pageScale,
     setPageScale,
+    sectionVisibility,
+    setSectionVisibility,
     updatePersonal,
     updateSection,
     addToSection,

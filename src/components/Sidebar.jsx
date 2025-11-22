@@ -1,6 +1,13 @@
 import { useState } from 'react'
 import { useResume } from '../context/ResumeContext'
-import { Minimize2, Maximize2, FileText, Palette, Type, Layout, RotateCcw, Printer } from 'lucide-react'
+import { Typography, Segmented, Space, Button, Card, Tooltip, Collapse, Switch, Divider, Badge } from 'antd'
+import {
+  BgColorsOutlined, FontSizeOutlined, FileTextOutlined, LayoutOutlined,
+  PrinterOutlined, UndoOutlined, ZoomInOutlined, ZoomOutOutlined,
+  EyeOutlined, EyeInvisibleOutlined, CheckOutlined
+} from '@ant-design/icons'
+
+const { Text, Title } = Typography
 
 const themeColors = [
   { name: 'Blue', value: '#0ea5e9' },
@@ -37,155 +44,245 @@ const templateGroups = {
   ]
 }
 
+const sectionsList = [
+  { key: 'experience', label: 'Experience', required: true },
+  { key: 'education', label: 'Education', required: true },
+  { key: 'skills', label: 'Skills', required: true },
+  { key: 'projects', label: 'Projects', required: false },
+  { key: 'certifications', label: 'Certifications', required: false },
+  { key: 'achievements', label: 'Achievements', required: false },
+  { key: 'awards', label: 'Awards', required: false },
+  { key: 'publications', label: 'Publications', required: false },
+  { key: 'volunteer', label: 'Volunteer', required: false },
+  { key: 'languages', label: 'Languages', required: false },
+  { key: 'interests', label: 'Interests', required: false },
+  { key: 'references', label: 'References', required: false },
+]
+
 export default function Sidebar({ themeColor, setThemeColor, activeTemplate, setActiveTemplate }) {
-  const { fontSize, setFontSize, resetToDefault, pageScale, setPageScale } = useResume()
+  const { fontSize, setFontSize, resetToDefault, pageScale, setPageScale, sectionVisibility, setSectionVisibility } = useResume()
   const [activeGroup, setActiveGroup] = useState('General')
 
-  return (
-    <aside className="w-64 bg-white border-r border-gray-200 p-4 no-print overflow-y-auto" style={{ height: 'calc(100vh - 64px)' }}>
-      {/* Theme Color */}
-      <div className="mb-5">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-          <Palette className="w-3 h-3" /> Theme Color
-        </h3>
-        <div className="grid grid-cols-4 gap-2">
+  // Handle section visibility toggle
+  const handleSectionToggle = (sectionKey, visible) => {
+    if (setSectionVisibility) {
+      setSectionVisibility(prev => ({
+        ...prev,
+        [sectionKey]: visible
+      }))
+    }
+  }
+
+  // Count visible sections
+  const visibleSections = sectionVisibility
+    ? Object.values(sectionVisibility).filter(Boolean).length
+    : sectionsList.length
+
+  const collapseItems = [
+    {
+      key: 'theme',
+      label: (
+        <Space>
+          <BgColorsOutlined style={{ color: themeColor }} />
+          <Text strong>Theme Color</Text>
+        </Space>
+      ),
+      children: (
+        <div className="grid grid-cols-4 gap-2 p-1">
           {themeColors.map((color) => (
-            <button
-              key={color.value}
-              onClick={() => setThemeColor(color.value)}
-              className={`w-8 h-8 rounded-lg transition-all hover:scale-110 ${
-                themeColor === color.value ? 'ring-2 ring-offset-2 ring-gray-400 scale-110' : ''
-              }`}
-              style={{ backgroundColor: color.value }}
-              title={color.name}
-            />
+            <Tooltip key={color.value} title={color.name}>
+              <button
+                onClick={() => setThemeColor(color.value)}
+                className="w-10 h-10 rounded-lg transition-all hover:scale-110 relative"
+                style={{
+                  backgroundColor: color.value,
+                  border: themeColor === color.value ? '3px solid white' : 'none',
+                  boxShadow: themeColor === color.value ? `0 0 0 2px ${color.value}` : 'none'
+                }}
+              >
+                {themeColor === color.value && (
+                  <CheckOutlined className="text-white absolute inset-0 m-auto" />
+                )}
+              </button>
+            </Tooltip>
           ))}
         </div>
-      </div>
-
-      {/* Font Size */}
-      <div className="mb-5">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-          <Type className="w-3 h-3" /> Font Size
-        </h3>
-        <div className="flex gap-1">
-          {['small', 'medium', 'large'].map((size) => (
-            <button
-              key={size}
-              onClick={() => setFontSize(size)}
-              className={`flex-1 py-1.5 px-2 rounded text-xs font-medium capitalize transition-colors ${
-                fontSize === size
-                  ? 'bg-primary-100 text-primary-700'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {size === 'small' ? 'S' : size === 'medium' ? 'M' : 'L'}
-            </button>
+      )
+    },
+    {
+      key: 'font',
+      label: (
+        <Space>
+          <FontSizeOutlined />
+          <Text strong>Font Size</Text>
+        </Space>
+      ),
+      children: (
+        <Segmented
+          block
+          value={fontSize}
+          onChange={setFontSize}
+          options={[
+            { label: 'Small', value: 'small' },
+            { label: 'Medium', value: 'medium' },
+            { label: 'Large', value: 'large' },
+          ]}
+        />
+      )
+    },
+    {
+      key: 'scale',
+      label: (
+        <Space>
+          <FileTextOutlined />
+          <Text strong>Page Scale</Text>
+        </Space>
+      ),
+      children: (
+        <div className="space-y-2">
+          <Segmented
+            block
+            value={pageScale}
+            onChange={(val) => setPageScale && setPageScale(val)}
+            options={[
+              { label: <Space><ZoomOutOutlined />90%</Space>, value: 0.9 },
+              { label: '100%', value: 1 },
+              { label: <Space><ZoomInOutlined />110%</Space>, value: 1.1 },
+            ]}
+          />
+          <Text type="secondary" className="text-xs">Scale content to fit one page</Text>
+        </div>
+      )
+    },
+    {
+      key: 'sections',
+      label: (
+        <Space>
+          <EyeOutlined />
+          <Text strong>Section Visibility</Text>
+          <Badge count={visibleSections} style={{ backgroundColor: themeColor }} size="small" />
+        </Space>
+      ),
+      children: (
+        <div className="space-y-2">
+          {sectionsList.map((section) => (
+            <div key={section.key} className="flex items-center justify-between py-1">
+              <Space>
+                <Text className={!sectionVisibility?.[section.key] !== false ? '' : 'text-gray-400'}>
+                  {section.label}
+                </Text>
+                {section.required && <Badge count="Core" style={{ backgroundColor: '#52c41a', fontSize: 10 }} />}
+              </Space>
+              <Switch
+                size="small"
+                checked={sectionVisibility?.[section.key] !== false}
+                onChange={(checked) => handleSectionToggle(section.key, checked)}
+                disabled={section.required}
+              />
+            </div>
           ))}
+          <Text type="secondary" className="text-xs block mt-2">
+            Core sections cannot be hidden. Toggle others based on relevance.
+          </Text>
         </div>
-      </div>
+      )
+    }
+  ]
 
-      {/* Page Fit */}
-      <div className="mb-5">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-          <FileText className="w-3 h-3" /> Page Fit
-        </h3>
-        <div className="flex gap-1">
-          <button
-            onClick={() => setPageScale && setPageScale(0.9)}
-            className={`flex-1 py-1.5 px-2 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1 ${
-              pageScale === 0.9 ? 'bg-primary-100 text-primary-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <Minimize2 className="w-3 h-3" /> Fit
-          </button>
-          <button
-            onClick={() => setPageScale && setPageScale(1)}
-            className={`flex-1 py-1.5 px-2 rounded text-xs font-medium transition-colors ${
-              pageScale === 1 ? 'bg-primary-100 text-primary-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            100%
-          </button>
-          <button
-            onClick={() => setPageScale && setPageScale(1.1)}
-            className={`flex-1 py-1.5 px-2 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1 ${
-              pageScale === 1.1 ? 'bg-primary-100 text-primary-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <Maximize2 className="w-3 h-3" /> +
-          </button>
-        </div>
-        <p className="text-xs text-gray-400 mt-1">Scale content to fit one page</p>
-      </div>
-
-      {/* Templates */}
-      <div className="mb-5">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-          <Layout className="w-3 h-3" /> Templates
-        </h3>
+  return (
+    <aside className="w-full bg-white p-4 no-print overflow-y-auto" style={{ height: 'calc(100vh - 64px)' }}>
+      {/* Templates Section */}
+      <div className="mb-4">
+        <Space className="mb-2">
+          <LayoutOutlined style={{ color: themeColor }} />
+          <Text strong>Templates</Text>
+        </Space>
 
         {/* Template Group Tabs */}
-        <div className="flex gap-1 mb-2">
-          {Object.keys(templateGroups).map((group) => (
-            <button
-              key={group}
-              onClick={() => setActiveGroup(group)}
-              className={`flex-1 py-1 px-1 rounded text-xs font-medium transition-colors ${
-                activeGroup === group
-                  ? 'bg-gray-800 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {group.split('-')[0]}
-            </button>
-          ))}
-        </div>
+        <Segmented
+          block
+          size="small"
+          value={activeGroup}
+          onChange={setActiveGroup}
+          options={Object.keys(templateGroups)}
+          className="mb-3"
+        />
 
         {/* Template List */}
-        <div className="space-y-1.5 max-h-52 overflow-y-auto">
+        <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
           {templateGroups[activeGroup].map((template) => (
-            <button
+            <Card
               key={template.id}
+              size="small"
+              hoverable
               onClick={() => setActiveTemplate(template.id)}
-              className={`w-full text-left p-2 rounded-lg transition-all ${
-                activeTemplate === template.id
-                  ? 'bg-primary-50 border-2 border-primary-500'
-                  : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+              className={`cursor-pointer transition-all ${
+                activeTemplate === template.id ? 'border-2' : 'border border-gray-200'
               }`}
+              style={{
+                borderColor: activeTemplate === template.id ? themeColor : undefined,
+                backgroundColor: activeTemplate === template.id ? `${themeColor}08` : undefined
+              }}
+              bodyStyle={{ padding: '8px 12px' }}
             >
-              <div className="font-medium text-sm text-gray-800">{template.name}</div>
-              <div className="text-xs text-gray-500">{template.description}</div>
-            </button>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Text strong className="text-sm">{template.name}</Text>
+                  <Text type="secondary" className="block text-xs">{template.description}</Text>
+                </div>
+                {activeTemplate === template.id && (
+                  <CheckOutlined style={{ color: themeColor }} />
+                )}
+              </div>
+            </Card>
           ))}
         </div>
       </div>
 
+      <Divider className="my-3" />
+
+      {/* Settings Collapse */}
+      <Collapse
+        ghost
+        defaultActiveKey={['theme']}
+        items={collapseItems}
+        expandIconPosition="end"
+        className="sidebar-collapse"
+      />
+
+      <Divider className="my-3" />
+
       {/* Quick Stats */}
-      <div className="mb-5 p-3 bg-gray-50 rounded-lg">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Quick Stats</h3>
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="text-gray-600">Template:</div>
-          <div className="font-medium text-gray-900 capitalize">{activeTemplate}</div>
-          <div className="text-gray-600">Font:</div>
-          <div className="font-medium text-gray-900 capitalize">{fontSize}</div>
+      <Card size="small" className="mb-4 bg-gray-50">
+        <Text type="secondary" className="text-xs uppercase tracking-wider">Current Settings</Text>
+        <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
+          <Text type="secondary">Template:</Text>
+          <Text strong className="capitalize">{activeTemplate}</Text>
+          <Text type="secondary">Font:</Text>
+          <Text strong className="capitalize">{fontSize}</Text>
+          <Text type="secondary">Scale:</Text>
+          <Text strong>{pageScale ? `${pageScale * 100}%` : '100%'}</Text>
         </div>
-      </div>
+      </Card>
 
       {/* Actions */}
       <div className="space-y-2">
-        <button
+        <Button
+          type="primary"
+          icon={<PrinterOutlined />}
+          block
+          size="large"
           onClick={() => window.print()}
-          className="w-full py-2 px-4 bg-gray-800 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
         >
-          <Printer className="w-4 h-4" /> Print / PDF
-        </button>
-        <button
+          Print / Save PDF
+        </Button>
+        <Button
+          icon={<UndoOutlined />}
+          block
           onClick={resetToDefault}
-          className="w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
         >
-          <RotateCcw className="w-4 h-4" /> Reset Data
-        </button>
+          Reset All Data
+        </Button>
       </div>
     </aside>
   )
