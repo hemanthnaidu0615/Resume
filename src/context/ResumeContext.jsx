@@ -1,13 +1,20 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import { defaultResumeData } from '../utils/defaultData'
 
 const ResumeContext = createContext()
+
+const MAX_HISTORY = 50
 
 export function ResumeProvider({ children }) {
   const [resumeData, setResumeData] = useState(() => {
     const saved = localStorage.getItem('resumeData')
     return saved ? JSON.parse(saved) : defaultResumeData
   })
+
+  // Undo/Redo history
+  const [history, setHistory] = useState([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+  const isUndoRedoRef = useRef(false)
 
   const [activeTemplate, setActiveTemplate] = useState(() => {
     return localStorage.getItem('activeTemplate') || 'professional'
@@ -68,6 +75,75 @@ export function ResumeProvider({ children }) {
   useEffect(() => {
     localStorage.setItem('sectionVisibility', JSON.stringify(sectionVisibility))
   }, [sectionVisibility])
+
+  // Track history for undo/redo
+  useEffect(() => {
+    if (isUndoRedoRef.current) {
+      isUndoRedoRef.current = false
+      return
+    }
+
+    const currentState = JSON.stringify(resumeData)
+    const lastState = history[historyIndex]
+
+    // Only add to history if state actually changed
+    if (currentState !== lastState) {
+      setHistory(prev => {
+        // Remove any future history if we're in the middle of the stack
+        const newHistory = prev.slice(0, historyIndex + 1)
+        newHistory.push(currentState)
+
+        // Limit history size
+        if (newHistory.length > MAX_HISTORY) {
+          newHistory.shift()
+          return newHistory
+        }
+        return newHistory
+      })
+      setHistoryIndex(prev => Math.min(prev + 1, MAX_HISTORY - 1))
+    }
+  }, [resumeData])
+
+  const canUndo = historyIndex > 0
+  const canRedo = historyIndex < history.length - 1
+
+  const undo = useCallback(() => {
+    if (canUndo) {
+      isUndoRedoRef.current = true
+      setHistoryIndex(prev => prev - 1)
+      setResumeData(JSON.parse(history[historyIndex - 1]))
+    }
+  }, [canUndo, history, historyIndex])
+
+  const redo = useCallback(() => {
+    if (canRedo) {
+      isUndoRedoRef.current = true
+      setHistoryIndex(prev => prev + 1)
+      setResumeData(JSON.parse(history[historyIndex + 1]))
+    }
+  }, [canRedo, history, historyIndex])
+
+  // Keyboard shortcuts for undo/redo
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z') {
+        if (e.shiftKey) {
+          e.preventDefault()
+          redo()
+        } else {
+          e.preventDefault()
+          undo()
+        }
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'y') {
+        e.preventDefault()
+        redo()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [undo, redo])
 
   const updatePersonal = (updates) => {
     setResumeData(prev => ({
@@ -154,7 +230,12 @@ export function ResumeProvider({ children }) {
     updateItemInSection,
     importData,
     exportData,
-    resetToDefault
+    resetToDefault,
+    // Undo/Redo
+    undo,
+    redo,
+    canUndo,
+    canRedo,
   }
 
   return (

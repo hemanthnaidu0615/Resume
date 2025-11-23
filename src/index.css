@@ -206,8 +206,111 @@
     display: block !important;
   }
 
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+    background: white !important;
+  }
+
+  /* Reset all backgrounds for print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Page setup */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  /* Resume container */
+  .resume-container {
+    width: 210mm !important;
+    min-height: 297mm !important;
+    max-height: none !important;
+    padding: 15mm 12mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Ensure proper page breaks */
+  .resume-section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  ul, ol {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Keep experience entries together */
+  .experience-entry,
+  .education-entry,
+  .project-entry {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Hide scrollbars and overflow */
+  ::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Ensure links are visible */
+  a {
+    text-decoration: none !important;
+  }
+
+  /* Proper font rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Fix background colors */
+  .bg-gray-50, .bg-gray-100 {
+    background-color: #f9fafb !important;
+  }
+
+  /* Remove transforms that might cause issues */
+  .resume-container * {
+    transform: none !important;
+  }
+}
+
+/* Print preview styling */
+@media screen {
+  .print-preview {
+    background: #525659;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+
+  .print-preview .resume-container {
+    box-shadow: 0 3px 8px -3px rgba(0, 0, 0, 0.2),
+                0 10px 20px -2px rgba(0, 0, 0, 0.15);
+    background: white;
+    max-width: 210mm;
+    min-height: 297mm;
   }
 }

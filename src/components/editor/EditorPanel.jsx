@@ -24,6 +24,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
+import UndoRedoButtons from '../UndoRedoButtons'
 import PersonalSection from './PersonalSection'
 import ExperienceSection from './ExperienceSection'
 import EducationSection from './EducationSection'
@@ -191,6 +192,8 @@ export default function EditorPanel() {
       <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
+            <UndoRedoButtons showLabels />
+            <div className="w-px h-6 bg-gray-200" />
             <Upload
               accept=".json"
               showUploadList={false}

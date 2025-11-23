@@ -16,6 +16,8 @@ import ATSChecker from './components/ATSChecker'
 import JDMatcher from './components/JDMatcher'
 import AchievementGenerator from './components/AchievementGenerator'
 import ContentOptimizer from './components/ContentOptimizer'
+import ResumeCompletenessScore from './components/ResumeCompletenessScore'
+import AutoSaveIndicator from './components/AutoSaveIndicator'
 
 const { Header, Content, Sider } = Layout
 const { Title, Text } = Typography
@@ -84,6 +86,16 @@ function App() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Auto-save indicator */}
+          <div className="hidden sm:flex items-center mr-2">
+            <AutoSaveIndicator />
+          </div>
+
+          {/* Resume completeness score */}
+          <div className="hidden md:block mr-2">
+            <ResumeCompletenessScore compact />
+          </div>
+
           <Tooltip title="Start New Resume with Wizard">
             <Button
               icon={<ExperimentOutlined />}
