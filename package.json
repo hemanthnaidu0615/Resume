@@ -1,0 +1,43 @@
+{
+  "name": "resume-builder-pro",
+  "version": "1.0.0",
+  "description": "Professional resume builder with 10+ templates and live editor",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hemanthnaidu0615/Resume"
+  },
+  "keywords": [
+    "resume",
+    "builder",
+    "react",
+    "vite",
+    "tailwind"
+  ],
+  "author": "Hemanth Naidu",
+  "license": "MIT",
+  "dependencies": {
+    "@ant-design/icons": "^6.1.0",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@tailwindcss/postcss": "^4.1.17",
+    "antd": "^6.0.0",
+    "dayjs": "^1.11.19",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.1",
+    "autoprefixer": "^10.4.22",
+    "lucide-react": "^0.554.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17",
+    "vite": "^7.2.4"
+  }
+}
