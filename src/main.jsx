@@ -4,6 +4,7 @@ import { ConfigProvider, App as AntApp } from 'antd'
 import App from './App'
 import { ResumeProvider } from './context/ResumeContext'
 import { TipsProvider, TipPopover } from './components/tips/TipsProvider'
+import ErrorBoundary from './components/ErrorBoundary'
 import './index.css'
 
 // Ant Design theme configuration
@@ -31,15 +32,17 @@ const theme = {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ConfigProvider theme={theme}>
-      <AntApp>
-        <ResumeProvider>
-          <TipsProvider>
-            <App />
-            <TipPopover />
-          </TipsProvider>
-        </ResumeProvider>
-      </AntApp>
-    </ConfigProvider>
+    <ErrorBoundary>
+      <ConfigProvider theme={theme}>
+        <AntApp>
+          <ResumeProvider>
+            <TipsProvider>
+              <App />
+              <TipPopover />
+            </TipsProvider>
+          </ResumeProvider>
+        </AntApp>
+      </ConfigProvider>
+    </ErrorBoundary>
   </React.StrictMode>,
 )

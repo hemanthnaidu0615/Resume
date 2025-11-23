@@ -157,15 +157,43 @@ export default function EditorPanel() {
   }
 
   const handleImport = (file) => {
+    // Validate file size (max 1MB)
+    const maxSize = 1024 * 1024 // 1MB
+    if (file.size > maxSize) {
+      message.error('File too large. Maximum size is 1MB.')
+      return false
+    }
+
+    // Validate file type
+    if (!file.type.includes('json') && !file.name.endsWith('.json')) {
+      message.error('Invalid file type. Please upload a JSON file.')
+      return false
+    }
+
     const reader = new FileReader()
     reader.onload = (event) => {
       try {
         const data = JSON.parse(event.target.result)
+
+        // Validate that it has expected structure
+        if (!data || typeof data !== 'object') {
+          throw new Error('Invalid data structure')
+        }
+
+        // Basic validation - check for required personal section
+        if (!data.personal || typeof data.personal !== 'object') {
+          message.warning('Imported data may be incomplete. Personal information section is missing.')
+        }
+
         importData(data)
         message.success('Resume data imported successfully!')
       } catch (error) {
+        console.error('Import error:', error)
         message.error('Invalid JSON file. Please check the file format.')
       }
+    }
+    reader.onerror = () => {
+      message.error('Failed to read file. Please try again.')
     }
     reader.readAsText(file)
     return false

@@ -1,12 +1,46 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
+import { message } from 'antd'
 import { defaultResumeData } from '../utils/defaultData'
 
 const ResumeContext = createContext()
 
 const MAX_HISTORY = 50
 
+// Parse shared URL data
+const parseSharedData = () => {
+  try {
+    const params = new URLSearchParams(window.location.search)
+    const encodedData = params.get('data')
+    if (encodedData) {
+      // Decode the data (reverse of what we do in ExportModal)
+      const decodedUri = decodeURIComponent(encodedData)
+      const jsonStr = decodeURIComponent(escape(atob(decodedUri)))
+      const data = JSON.parse(jsonStr)
+
+      // Validate basic structure
+      if (data && typeof data === 'object' && data.personal) {
+        // Clear URL params after loading
+        window.history.replaceState({}, '', window.location.pathname)
+        return data
+      }
+    }
+  } catch (error) {
+    console.error('Failed to parse shared resume data:', error)
+  }
+  return null
+}
+
 export function ResumeProvider({ children }) {
   const [resumeData, setResumeData] = useState(() => {
+    // First, check for shared data in URL
+    const sharedData = parseSharedData()
+    if (sharedData) {
+      // Show notification in next tick to avoid rendering issues
+      setTimeout(() => message.success('Resume loaded from shared link!'), 100)
+      return sharedData
+    }
+
+    // Then check localStorage
     const saved = localStorage.getItem('resumeData')
     return saved ? JSON.parse(saved) : defaultResumeData
   })
@@ -145,7 +179,12 @@ export function ResumeProvider({ children }) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [undo, redo])
 
-  const updatePersonal = (updates) => {
+  const updatePersonal = (keyOrUpdates, value) => {
+    // Support both updatePersonal({ field: value }) and updatePersonal('field', value)
+    const updates = typeof keyOrUpdates === 'string'
+      ? { [keyOrUpdates]: value }
+      : keyOrUpdates
+
     setResumeData(prev => ({
       ...prev,
       personal: { ...prev.personal, ...updates }
